@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chimwemwe Siyingwa — Developer Portfolio</title>
+  <meta name="description" content="Software developer building solutions that solve real problems. Third-year IS&T student, junior developer, and open source contributor.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08090C;
+      --surface: #1C222B;
+      --text: #C9D1D9;
+      --muted: #6E7681;
+      --green: #3FB950;
+      --red: #F85149;
+      --blue: #58A6FF;
+      --amber: #E3B341;
+      --border: #2A313C;
+      --tab-dim: #0D1117;
+      --tab-active: #1C222B;
+      --sidebar-width: 220px;
+      --sidebar-width-mobile: 0px;
+      --tab-height: 36px;
+      --status-height: 24px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    html { background: var(--bg); scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.65;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Tab Strip (Top Bar) ─────────────────────── */
+    .tab-strip {
+      display: flex;
+      align-items: stretch;
+      height: var(--tab-height);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      z-index: 100;
+      -webkit-app-region: drag;
+    }
+
+    .traffic-lights {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      flex-shrink: 0;
+      -webkit-app-region: no-drag;
+    }
+    .traffic-lights span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .traffic-lights span:nth-child(1) { background: #FF5F57; }
+    .traffic-lights span:nth-child(2) { background: #FEBC2E; }
+    .traffic-lights span:nth-child(3) { background: #28C840; }
+
+    .tabs {
+      display: flex;
+      align-items: stretch;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-app-region: no-drag;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      border-right: 1px solid var(--border);
+      white-space: nowrap;
+      transition: color 0.15s, background 0.15s;
+      user-select: none;
+      text-decoration: none;
+      position: relative;
+    }
+    .tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .tab.active {
+      color: var(--text);
+      background: var(--tab-active);
+    }
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--blue);
+    }
+    .tab .icon {
+      font-size: 13px;
+      opacity: 0.6;
+    }
+    .tab .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .tab:hover .dot { opacity: 0.5; }
+
+    @media (max-width: 767px) {
+      .tab-strip { display: none; }
+    }
+
+    /* ── Layout ──────────────────────────────────── */
+    .layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ─────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      box-shadow: 2px 0 8px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .sidebar::-webkit-scrollbar { display: none; }
+
+    .sidebar-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      padding: 12px 16px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .file-tree {
+      padding: 8px 0;
+      flex: 1;
+    }
+
+    .tree-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 16px 4px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .tree-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .tree-item.active { color: var(--text); background: rgba(88,166,255,0.06); }
+    .tree-item .icon { font-size: 13px; opacity: 0.6; width: 16px; text-align: center; flex-shrink: 0; }
+    .tree-item.folder { color: var(--text); }
+    .tree-item.folder .icon { color: var(--blue); opacity: 0.7; }
+    .tree-item.indent { padding-left: 32px; }
+    .tree-item.indent2 { padding-left: 48px; }
+
+    @media (max-width: 767px) {
+      .sidebar { display: none; }
+    }
+
+    /* ── Mobile Bottom Nav ───────────────────────── */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      bottom: var(--status-height);
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
+      z-index: 90;
+      padding: 6px 8px;
+      gap: 4px;
+      justify-content: space-around;
+    }
+    .mobile-nav a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 6px 8px;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      transition: color 0.15s;
+    }
+    .mobile-nav a:hover, .mobile-nav a.active { color: var(--text); }
+    .mobile-nav a .icon { font-size: 16px; }
+    @media (max-width: 767px) {
+      .mobile-nav { display: flex; }
+    }
+
+    /* ── Main Editor ─────────────────────────────── */
+    .editor {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg);
+      position: relative;
+    }
+
+    .section {
+      padding: 48px 56px;
+      max-width: 860px;
+      border-bottom: 1px solid var(--border);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .section:last-child { border-bottom: none; }
+
+    @media (max-width: 767px) {
+      .section { padding: 32px 20px; min-height: auto; }
+    }
+
+    /* ── Hero ─────────────────────────────────────── */
+    .hero-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(48px, 10vw, 96px);
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+    .code-block {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(13px, 1.6vw, 15px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 32px;
+      max-width: 540px;
+      box-shadow: var(--shadow);
+    }
+    .code-block-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .code-block-header .dots {
+      display: flex;
+      gap: 5px;
+    }
+    .code-block-header .dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+    .code-block-header .dots span:nth-child(1) { background: #FF5F57; }
+    .code-block-header .dots span:nth-child(2) { background: #FEBC2E; }
+    .code-block-header .dots span:nth-child(3) { background: #28C840; }
+    .code-block-body {
+      padding: 16px 0;
+      line-height: 1.8;
+    }
+    .code-line {
+      display: flex;
+      padding: 0 16px;
+    }
+    .code-line:hover { background: rgba(255,255,255,0.02); }
+    .line-num {
+      color: var(--muted);
+      min-width: 28px;
+      text-align: right;
+      margin-right: 16px;
+      user-select: none;
+      opacity: 0.5;
+    }
+    .code-content {
+      flex: 1;
+      white-space: pre;
+    }
+    .code-kw { color: #FF7B72; }
+    .code-fn { color: #D2A8FF; }
+    .code-str { color: #A5D6FF; }
+    .code-cm { color: #8B949E; font-style: italic; }
+    .code-var { color: var(--text); }
+    .code-op { color: var(--text); }
+    .code-type { color: #FFA657; }
+    .code-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 1.15em;
+      background: var(--text);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) {
+      .code-cursor { animation: none; opacity: 1; }
+    }
+    .hero-roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .role-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 4px;
+    }
+
+    /* ── About (README.md) ───────────────────────── */
+    .readme-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .readme-header .file-icon { font-size: 18px; color: var(--blue); opacity: 0.7; }
+    .readme-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .readme-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .readme-tab {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      padding: 8px 16px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s;
+    }
+    .readme-tab.active {
+      color: var(--text);
+      border-bottom-color: var(--blue);
+    }
+    .readme-tab:hover { color: var(--text); }
+
+    .about-text {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.75;
+      max-width: 640px;
+    }
+    .about-text strong { color: var(--text); font-weight: 600; }
+    .gpa-callout {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+    .gpa-callout .label { color: var(--muted); }
+    .gpa-callout .value {
+      color: var(--amber);
+      font-weight: 500;
+      font-size: 28px;
+    }
+
+    /* ── Experience (git log) ─────────────────────── */
+    .log-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .log-header .file-icon { font-size: 16px; color: var(--green); opacity: 0.7; }
+    .log-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .log-entry {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(33,38,45,0.5);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      cursor: default;
+      position: relative;
+    }
+    .log-entry:last-child { border-bottom: none; }
+    .log-hash {
+      color: var(--muted);
+      flex-shrink: 0;
+      min-width: 60px;
+    }
+    .log-type {
+      flex-shrink: 0;
+      min-width: 48px;
+    }
+    .log-type.feat { color: var(--green); }
+    .log-type.fix { color: var(--amber); }
+    .log-scope { color: var(--muted); }
+    .log-msg { color: var(--text); }
+    .log-pr {
+      color: var(--blue);
+      font-size: 12px;
+    }
+    .log-entry .tooltip {
+      display: none;
+      position: absolute;
+      left: 0;
+      bottom: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      z-index: 10;
+      margin-bottom: 4px;
+    }
+    .log-entry:hover .tooltip { display: block; }
+
+    /* ── Projects ─────────────────────────────────── */
+    .projects-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .projects-header .file-icon { font-size: 16px; color: var(--blue); opacity: 0.7; }
+    .projects-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .repo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .repo-card:hover {
+      border-color: var(--green);
+      box-shadow: var(--shadow), 0 0 0 1px rgba(63,185,80,0.15);
+      transform: translateY(-1px);
+    }
+    .repo-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .repo-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .repo-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .repo-dots span:nth-child(1) { background: #FF5F57; }
+    .repo-dots span:nth-child(2) { background: #FEBC2E; }
+    .repo-dots span:nth-child(3) { background: #28C840; }
+    .repo-titlebar .title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    .repo-body {
+      padding: 24px;
+    }
+    .repo-prompt {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .repo-prompt .cmd { color: var(--green); }
+    .repo-body h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .repo-body p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 16px;
+      max-width: 600px;
+    }
+    .repo-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .repo-tags span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--green);
+      background: rgba(63,185,80,0.06);
+      border: 1px solid rgba(63,185,80,0.12);
+      padding: 3px 10px;
+      border-radius: 3px;
+    }
+    .repo-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .repo-clone {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: rgba(255,255,255,0.03);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .repo-clone:hover {
+      border-color: var(--green);
+      background: rgba(63,185,80,0.06);
+    }
+    .repo-clone:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+    .repo-clone .star {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1.5px solid var(--muted);
+      display: inline-block;
+    }
+
+    /* ── Skills ───────────────────────────────────── */
+    .skills-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .skills-header .file-icon { font-size: 16px; color: var(--amber); opacity: 0.7; }
+    .skills-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+    }
+    .skill-group h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+    .skill-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .skill-chips span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 4px;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .skill-chips span:hover {
+      border-color: var(--blue);
+      color: var(--text);
+    }
+
+    /* ── Education ────────────────────────────────── */
+    .edu-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .edu-top h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .edu-top .degree { font-size: 13px; color: var(--muted); }
+    .edu-top .years {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .gpa-trend {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .gpa-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .gpa-item .semester {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+    .gpa-item .score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .gpa-item .score.current { color: var(--amber); }
+    .gpa-arrow {
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+    }
+    .coursework-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .coursework-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .coursework-chips span {
+      font-size: 13px;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 4px;
+    }
+
+    /* ── Connect ──────────────────────────────────── */
+    .connect-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .connect-header .file-icon { font-size: 16px; color: var(--green); opacity: 0.7; }
+    .connect-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .connect-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .connect-links a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--blue);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 8px 20px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+      background: rgba(255,255,255,0.02);
+    }
+    .connect-links a:hover {
+      border-color: var(--blue);
+      background: rgba(88,166,255,0.06);
+      color: var(--text);
+    }
+    .connect-links a:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+    .connect-links a svg { width: 14px; height: 14px; }
+
+    /* ── Status Bar ──────────────────────────────── */
+    .status-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--status-height);
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      z-index: 100;
+      gap: 16px;
+    }
+    .status-bar .left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .status-bar .right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: auto;
+    }
+    .status-bar .branch {
+      color: var(--blue);
+    }
+    .status-bar .problems {
+      color: var(--green);
+    }
+
+    @media (max-width: 767px) {
+      .status-bar { font-size: 10px; gap: 10px; padding: 0 8px; }
+      .status-bar .hide-mobile { display: none; }
+    }
+
+    @media (max-width: 767px) {
+      body { padding-bottom: 0; }
+    }
+
+    /* ── Focus Visible Global ─────────────────────── */
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+
+    /* ── Selection ────────────────────────────────── */
+    ::selection {
+      background: rgba(88,166,255,0.25);
+      color: var(--text);
+    }
+
+    /* ── Scrollbar ────────────────────────────────── */
+    .editor::-webkit-scrollbar { width: 8px; }
+    .editor::-webkit-scrollbar-track { background: var(--bg); }
+    .editor::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .editor::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <!-- Tab Strip -->
+  <div class="tab-strip">
+    <div class="traffic-lights">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="tabs">
+      <a href="#hero" class="tab active" data-section="hero">
+        <span class="icon">⚛</span> home.tsx <span class="dot"></span>
+      </a>
+      <a href="#about" class="tab" data-section="about">
+        <span class="icon">📖</span> about.md <span class="dot"></span>
+      </a>
+      <a href="#experience" class="tab" data-section="experience">
+        <span class="icon">📜</span> experience.log <span class="dot"></span>
+      </a>
+      <a href="#projects" class="tab" data-section="projects">
+        <span class="icon">📁</span> projects/ <span class="dot"></span>
+      </a>
+      <a href="#skills" class="tab" data-section="skills">
+        <span class="icon">⚙</span> skills.json <span class="dot"></span>
+      </a>
+      <a href="#education" class="tab" data-section="education">
+        <span class="icon">🎓</span> education.md <span class="dot"></span>
+      </a>
+      <a href="#connect" class="tab" data-section="connect">
+        <span class="icon">⚡</span> connect.sh <span class="dot"></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-header">Explorer</div>
+      <div class="file-tree">
+        <div class="tree-item folder"><span class="icon">📂</span> portfolio/</div>
+        <a href="#hero" class="tree-item indent active" data-section="hero"><span class="icon">⚛</span> home.tsx</a>
+        <a href="#about" class="tree-item indent" data-section="about"><span class="icon">📖</span> README.md</a>
+        <div class="tree-item folder"><span class="icon">📂</span> experience/</div>
+        <a href="#experience" class="tree-item indent" data-section="experience"><span class="icon">📜</span> git.log</a>
+        <div class="tree-item folder"><span class="icon">📂</span> projects/</div>
+        <a href="#projects" class="tree-item indent" data-section="projects"><span class="icon">📁</span> ifms/</a>
+        <a href="#projects" class="tree-item indent" data-section="projects"><span class="icon">📁</span> selective-memory/</a>
+        <a href="#skills" class="tree-item" data-section="skills"><span class="icon">⚙</span> skills.json</a>
+        <a href="#education" class="tree-item" data-section="education"><span class="icon">🎓</span> education.md</a>
+        <a href="#connect" class="tree-item" data-section="connect"><span class="icon">⚡</span> connect.sh</a>
+      </div>
+    </nav>
+
+    <!-- Editor -->
+    <main class="editor" id="editor">
+
+      <!-- Hero -->
+      <section class="section" id="hero">
+        <h1 class="hero-name">Chimwemwe<br>Siyingwa</h1>
+        <div class="code-block">
+          <div class="code-block-header">
+            <div class="dots"><span></span><span></span><span></span></div>
+            home.tsx
+          </div>
+          <div class="code-block-body" id="code-block">
+            <div class="code-line">
+              <span class="line-num">1</span>
+              <span class="code-content"><span class="code-kw">const</span> <span class="code-fn">developer</span> <span class="code-op">=</span> <span class="code-op">{</span></span>
+            </div>
+            <div class="code-line">
+              <span class="line-num">2</span>
+              <span class="code-content">  <span class="code-var">name</span><span class="code-op">:</span> <span class="code-str">"Chimwemwe Siyingwa"</span><span class="code-op">,</span></span>
+            </div>
+            <div class="code-line">
+              <span class="line-num">3</span>
+              <span class="code-content">  <span class="code-var">role</span><span class="code-op">:</span> <span class="code-str">"Junior Developer"</span><span class="code-op">,</span></span>
+            </div>
+            <div class="code-line">
+              <span class="line-num">4</span>
+              <span class="code-content">  <span class="code-var">motto</span><span class="code-op">:</span> <span class="code-str" id="typewriter"></span><span class="code-cursor" id="code-cursor"></span></span>
+            </div>
+            <div class="code-line">
+              <span class="line-num">5</span>
+              <span class="code-content"><span class="code-op">}</span><span class="code-op">;</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-roles">
+          <span class="role-tag">Third-year IS&T Student</span>
+          <span class="role-tag">Junior Developer</span>
+          <span class="role-tag">Open Source Contributor</span>
+        </div>
+      </section>
+
+      <!-- About (README.md) -->
+      <section class="section" id="about">
+        <div class="readme-header">
+          <span class="file-icon">📖</span>
+          <h2>README.md</h2>
+        </div>
+        <div class="readme-tabs">
+          <button class="readme-tab active">Preview</button>
+          <button class="readme-tab">Source</button>
+        </div>
+        <p class="about-text">
+          I am a third-year Bachelor of Science in Information Systems and Technology student at the <strong>University of Lusaka</strong> with a passion for software engineering, open source, and building technology that solves real-world problems. Alongside maintaining a <strong>4.00 semester GPA</strong>, I have gained practical industry experience as a <strong>Junior Developer at Ontech Solutions</strong>, where I contributed to the Local Authorities Management and Collection System (LAMCS), collaborating with senior developers on a production web application. Open source has become one of the most rewarding parts of my learning journey&nbsp;&mdash; contributing to <strong>activist</strong>, <strong>CVAT</strong>, and <strong>SymPy</strong>.
+        </p>
+        <div class="gpa-callout">
+          <span class="label">Current GPA</span>
+          <span class="value">4.00</span>
+        </div>
+      </section>
+
+      <!-- Experience (git log) -->
+      <section class="section" id="experience">
+        <div class="log-header">
+          <span class="file-icon">📜</span>
+          <h2>experience.log</h2>
+        </div>
+
+        <div class="log-entry">
+          <span class="tooltip">merged Mar 2025 · reviewed by senior dev</span>
+          <span class="log-hash">a1b2c3d</span>
+          <span class="log-type feat">feat</span>
+          <span class="log-scope">(lamcs):</span>
+          <span class="log-msg">collaborate on production web app</span>
+        </div>
+
+        <div class="log-entry">
+          <span class="tooltip">merged 2025 · open source contribution</span>
+          <span class="log-hash">e4f5g6h</span>
+          <span class="log-type fix">fix</span>
+          <span class="log-scope">(activist):</span>
+          <span class="log-msg">mobile UI issues, logos, edit shortcuts, location filter</span>
+          <span class="log-pr">PR #2258</span>
+        </div>
+
+        <div class="log-entry">
+          <span class="tooltip">merged 2025 · open source contribution</span>
+          <span class="log-hash">i7j8k9l</span>
+          <span class="log-type fix">fix</span>
+          <span class="log-scope">(activist):</span>
+          <span class="log-msg">mobile UI issues</span>
+          <span class="log-pr">PR #2259</span>
+        </div>
+
+        <div class="log-entry">
+          <span class="tooltip">merged 2025 · documentation fix</span>
+          <span class="log-hash">m0n1o2p</span>
+          <span class="log-type fix">fix</span>
+          <span class="log-scope">(cvat):</span>
+          <span class="log-msg">installation documentation</span>
+          <span class="log-pr">PR #10917</span>
+        </div>
+
+        <div class="log-entry">
+          <span class="tooltip">merged 2025 · type annotations</span>
+          <span class="log-hash">q3r4s5t</span>
+          <span class="log-type feat">feat</span>
+          <span class="log-scope">(sympy):</span>
+          <span class="log-msg">add type annotations to DirectProduct</span>
+          <span class="log-pr">PR #30082</span>
+        </div>
+      </section>
+
+      <!-- Projects -->
+      <section class="section" id="projects">
+        <div class="projects-header">
+          <span class="file-icon">📁</span>
+          <h2>projects/</h2>
+        </div>
+
+        <div class="repo-card">
+          <div class="repo-titlebar">
+            <div class="repo-dots"><span></span><span></span><span></span></div>
+            <span class="title">~/ifms</span>
+          </div>
+          <div class="repo-body">
+            <div class="repo-prompt"><span class="cmd">$</span> cat README.md</div>
+            <h3>Intelligent Financial Management System</h3>
+            <p>Helps users manage budgets, analyze spending, and generate predictive insights.</p>
+            <div class="repo-tags">
+              <span>--react</span>
+              <span>--flask</span>
+              <span>--postgresql</span>
+              <span>--ml</span>
+            </div>
+            <div class="repo-actions">
+              <a href="https://github.com/mwemmz/ifms2" target="_blank" rel="noopener noreferrer" class="repo-clone">
+                <span class="star"></span> View on GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="repo-card">
+          <div class="repo-titlebar">
+            <div class="repo-dots"><span></span><span></span><span></span></div>
+            <span class="title">~/selective-memory</span>
+          </div>
+          <div class="repo-body">
+            <div class="repo-prompt"><span class="cmd">$</span> cat README.md</div>
+            <h3>Selective Memory Chat Agent</h3>
+            <p>A chatbot that decides which facts are worth remembering, stores them as vector embeddings, and retrieves them only when relevant&nbsp;&mdash; no full-history stuffing. Demonstrates RAG, semantic search, prompt engineering under token constraints, and modular agent architecture.</p>
+            <div class="repo-tags">
+              <span>--python</span>
+              <span>--gpt-4o-mini</span>
+              <span>--chromadb</span>
+              <span>--sqlite</span>
+              <span>--streamlit</span>
+            </div>
+            <div class="repo-actions">
+              <a href="https://github.com/mwemmz/selective-memory-chat-agent" target="_blank" rel="noopener noreferrer" class="repo-clone">
+                <span class="star"></span> View on GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Skills -->
+      <section class="section" id="skills">
+        <div class="skills-header">
+          <span class="file-icon">⚙</span>
+          <h2>skills.json</h2>
+        </div>
+        <div class="skills-grid">
+          <div class="skill-group">
+            <h3>Languages</h3>
+            <div class="skill-chips">
+              <span>Python</span>
+              <span>Java</span>
+              <span>TypeScript</span>
+              <span>JavaScript</span>
+              <span>HTML</span>
+              <span>CSS</span>
+              <span>SQL</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h3>Frameworks</h3>
+            <div class="skill-chips">
+              <span>React</span>
+              <span>Flask</span>
+              <span>Vue.js</span>
+              <span>Nuxt</span>
+              <span>Tailwind CSS</span>
+              <span>JWT</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h3>Databases & DevOps</h3>
+            <div class="skill-chips">
+              <span>PostgreSQL</span>
+              <span>SQLite</span>
+              <span>Firebase</span>
+              <span>Docker</span>
+              <span>Git</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h3>Testing</h3>
+            <div class="skill-chips">
+              <span>pytest</span>
+              <span>mypy</span>
+              <span>ESLint</span>
+              <span>Vitest</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Education -->
+      <section class="section" id="education">
+        <div class="log-header">
+          <span class="file-icon">🎓</span>
+          <h2>education.md</h2>
+        </div>
+        <div class="edu-top">
+          <h3>University of Lusaka</h3>
+          <span class="degree">BSc Information Systems and Technology</span>
+          <span class="years">2023 &ndash; 2027</span>
+        </div>
+        <div class="gpa-trend">
+          <div class="gpa-item">
+            <span class="semester">Year 1</span>
+            <span class="score">3.70</span>
+          </div>
+          <span class="gpa-arrow">&rarr;</span>
+          <div class="gpa-item">
+            <span class="semester">Year 2</span>
+            <span class="score">3.90</span>
+          </div>
+          <span class="gpa-arrow">&rarr;</span>
+          <div class="gpa-item">
+            <span class="semester">Current</span>
+            <span class="score current">4.00</span>
+          </div>
+        </div>
+        <p class="coursework-label">Relevant Coursework</p>
+        <div class="coursework-chips">
+          <span>Systems Analysis</span>
+          <span>Database Design</span>
+          <span>Data Structures</span>
+          <span>Project Management</span>
+        </div>
+      </section>
+
+      <!-- Connect -->
+      <section class="section" id="connect">
+        <div class="connect-header">
+          <span class="file-icon">⚡</span>
+          <h2>connect.sh</h2>
+        </div>
+        <div class="connect-links">
+          <a href="https://github.com/mwemmz" target="_blank" rel="noopener noreferrer">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/in/chimwemwe-siyingwa-97b627352" target="_blank" rel="noopener noreferrer">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
+          <a href="mailto:chimwemwesiyingwa361@gmail.com">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
+            Email
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-nav">
+    <a href="#hero" class="active" data-section="hero"><span class="icon">⚛</span> hero</a>
+    <a href="#about" data-section="about"><span class="icon">📖</span> about</a>
+    <a href="#experience" data-section="experience"><span class="icon">📜</span> exp</a>
+    <a href="#projects" data-section="projects"><span class="icon">📁</span> projects</a>
+    <a href="#skills" data-section="skills"><span class="icon">⚙</span> skills</a>
+    <a href="#connect" data-section="connect"><span class="icon">⚡</span> contact</a>
+  </nav>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="left">
+      <span class="branch">⎇ main</span>
+      <span class="problems">✓ 0 problems</span>
+    </div>
+    <div class="right">
+      <span>UTF-8</span>
+      <span class="hide-mobile">Spaces: 2</span>
+      <span id="status-line">Ln 1</span>
+    </div>
+  </div>
+
+  <script>
+    // ── Typewriter (code-writing style) ────────────
+    (function() {
+      const text = 'Building software that solves real problems.';
+      const el = document.getElementById('typewriter');
+      const cursor = document.getElementById('code-cursor');
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) {
+        el.textContent = '"' + text + '"';
+        if (cursor) cursor.style.display = 'none';
+        return;
+      }
+      let i = 0;
+      // Add opening quote first
+      el.textContent = '"';
+      function type() {
+        if (i < text.length) {
+          el.textContent = '"' + text.substring(0, i + 1);
+          i++;
+          setTimeout(type, 45);
+        } else {
+          // Typing done — keep cursor blinking for a beat then hide
+          setTimeout(() => { if (cursor) cursor.style.display = 'none'; }, 1200);
+        }
+      }
+      setTimeout(type, 600);
+    })();
+
+    // ── Active Section Tracking ────────────────────
+    (function() {
+      const editor = document.getElementById('editor');
+      const sections = document.querySelectorAll('.section');
+      const tabs = document.querySelectorAll('.tab[data-section]');
+      const treeItems = document.querySelectorAll('.tree-item[data-section]');
+      const mobileLinks = document.querySelectorAll('.mobile-nav a[data-section]');
+      const statusLine = document.getElementById('status-line');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            tabs.forEach(t => t.classList.toggle('active', t.dataset.section === id));
+            treeItems.forEach(t => t.classList.toggle('active', t.dataset.section === id));
+            mobileLinks.forEach(t => t.classList.toggle('active', t.dataset.section === id));
+          }
+        });
+      }, { root: editor, threshold: 0.3 });
+
+      sections.forEach(s => observer.observe(s));
+
+      // Status bar line counter
+      editor.addEventListener('scroll', () => {
+        const scrollTop = editor.scrollTop;
+        const line = Math.floor(scrollTop / 22) + 1;
+        statusLine.textContent = 'Ln ' + line;
+      });
+    })();
+  </script>
+
+</body>
+</html>
