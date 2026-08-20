@@ -570,8 +570,33 @@
     }
     .repo-actions {
       display: flex;
+      gap: 10px;
       justify-content: flex-end;
     }
+    .repo-live {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--green);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border: 1px solid rgba(63,185,80,0.3);
+      border-radius: 4px;
+      background: rgba(63,185,80,0.06);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .repo-live:hover {
+      border-color: var(--green);
+      background: rgba(63,185,80,0.12);
+    }
+    .repo-live:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+    .repo-live svg { width: 14px; height: 14px; }
     .repo-clone {
       font-family: 'JetBrains Mono', monospace;
       font-size: 12px;
@@ -887,8 +912,12 @@
         <div class="tree-item folder"><span class="icon">📂</span> experience/</div>
         <a href="#experience" class="tree-item indent" data-section="experience"><span class="icon">📜</span> git.log</a>
         <div class="tree-item folder"><span class="icon">📂</span> projects/</div>
+        <a href="#projects" class="tree-item indent" data-section="projects"><span class="icon">📁</span> unified-mine/</a>
+        <a href="#projects" class="tree-item indent" data-section="projects"><span class="icon">📁</span> airport360/</a>
         <a href="#projects" class="tree-item indent" data-section="projects"><span class="icon">📁</span> ifms/</a>
+        <a href="#projects" class="tree-item indent" data-section="projects"><span class="icon">📁</span> farm-system/</a>
         <a href="#projects" class="tree-item indent" data-section="projects"><span class="icon">📁</span> selective-memory/</a>
+        <a href="#projects" class="tree-item indent" data-section="projects"><span class="icon">📁</span> car-showroom/</a>
         <a href="#skills" class="tree-item" data-section="skills"><span class="icon">⚙</span> skills.json</a>
         <a href="#education" class="tree-item" data-section="education"><span class="icon">🎓</span> education.md</a>
         <a href="#connect" class="tree-item" data-section="connect"><span class="icon">⚡</span> connect.sh</a>
@@ -1017,12 +1046,65 @@
         <div class="repo-card">
           <div class="repo-titlebar">
             <div class="repo-dots"><span></span><span></span><span></span></div>
+            <span class="title">~/unified-mine-operations-platform</span>
+          </div>
+          <div class="repo-body">
+            <div class="repo-prompt"><span class="cmd">$</span> cat README.md</div>
+            <h3>Unified Mine Operations Platform</h3>
+            <p>A full-stack mining operations management platform handling workflow orchestration, data tracking, and operational dashboards. Built with a multi-language architecture using TypeScript, Python, Docker, and Shell scripts.</p>
+            <div class="repo-tags">
+              <span>--typescript</span>
+              <span>--python</span>
+              <span>--docker</span>
+              <span>--shell</span>
+            </div>
+            <div class="repo-actions">
+              <a href="https://unified-mine-operations-platform.onrender.com/" target="_blank" rel="noopener noreferrer" class="repo-live">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+                View Live
+              </a>
+              <a href="https://github.com/mwemmz/unified-mine-operations-platform" target="_blank" rel="noopener noreferrer" class="repo-clone">
+                <span class="star"></span> View on GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="repo-card">
+          <div class="repo-titlebar">
+            <div class="repo-dots"><span></span><span></span><span></span></div>
+            <span class="title">~/airport360</span>
+          </div>
+          <div class="repo-body">
+            <div class="repo-prompt"><span class="cmd">$</span> cat README.md</div>
+            <h3>Airport360</h3>
+            <p>An airport management system handling flight operations, scheduling, and resource allocation. Built with a Python backend and TypeScript frontend, containerized with Docker for consistent deployment.</p>
+            <div class="repo-tags">
+              <span>--python</span>
+              <span>--typescript</span>
+              <span>--docker</span>
+            </div>
+            <div class="repo-actions">
+              <a href="https://airport360-frontend.onrender.com/" target="_blank" rel="noopener noreferrer" class="repo-live">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+                View Live
+              </a>
+              <a href="https://github.com/mwemmz/airport360" target="_blank" rel="noopener noreferrer" class="repo-clone">
+                <span class="star"></span> View on GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="repo-card">
+          <div class="repo-titlebar">
+            <div class="repo-dots"><span></span><span></span><span></span></div>
             <span class="title">~/ifms</span>
           </div>
           <div class="repo-body">
             <div class="repo-prompt"><span class="cmd">$</span> cat README.md</div>
             <h3>Intelligent Financial Management System</h3>
-            <p>Helps users manage budgets, analyze spending, and generate predictive insights.</p>
+            <p>Helps users manage budgets, analyze spending, and generate predictive insights using machine learning. Features a React frontend with a Flask API and PostgreSQL database.</p>
             <div class="repo-tags">
               <span>--react</span>
               <span>--flask</span>
@@ -1030,7 +1112,37 @@
               <span>--ml</span>
             </div>
             <div class="repo-actions">
+              <a href="https://ifms2-22.onrender.com/" target="_blank" rel="noopener noreferrer" class="repo-live">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+                View Live
+              </a>
               <a href="https://github.com/mwemmz/ifms2" target="_blank" rel="noopener noreferrer" class="repo-clone">
+                <span class="star"></span> View on GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="repo-card">
+          <div class="repo-titlebar">
+            <div class="repo-dots"><span></span><span></span><span></span></div>
+            <span class="title">~/server-side-farm-system</span>
+          </div>
+          <div class="repo-body">
+            <div class="repo-prompt"><span class="cmd">$</span> cat README.md</div>
+            <h3>Farm Management System</h3>
+            <p>A server-side application for managing farm operations including crop tracking, inventory, and resource planning. Built with PHP and containerized with Docker.</p>
+            <div class="repo-tags">
+              <span>--php</span>
+              <span>--docker</span>
+              <span>--css</span>
+            </div>
+            <div class="repo-actions">
+              <a href="https://farm-management-system-mb1e.onrender.com/" target="_blank" rel="noopener noreferrer" class="repo-live">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+                View Live
+              </a>
+              <a href="https://github.com/mwemmz/server-side-farm-system" target="_blank" rel="noopener noreferrer" class="repo-clone">
                 <span class="star"></span> View on GitHub
               </a>
             </div>
@@ -1045,16 +1157,37 @@
           <div class="repo-body">
             <div class="repo-prompt"><span class="cmd">$</span> cat README.md</div>
             <h3>Selective Memory Chat Agent</h3>
-            <p>A chatbot that decides which facts are worth remembering, stores them as vector embeddings, and retrieves them only when relevant&nbsp;&mdash; no full-history stuffing. Demonstrates RAG, semantic search, prompt engineering under token constraints, and modular agent architecture.</p>
+            <p>A chatbot that decides which facts are worth remembering, stores them as vector embeddings, and retrieves them only when relevant. Demonstrates RAG, semantic search, prompt engineering under token constraints, and modular agent architecture.</p>
             <div class="repo-tags">
               <span>--python</span>
               <span>--gpt-4o-mini</span>
               <span>--chromadb</span>
-              <span>--sqlite</span>
               <span>--streamlit</span>
             </div>
             <div class="repo-actions">
               <a href="https://github.com/mwemmz/selective-memory-chat-agent" target="_blank" rel="noopener noreferrer" class="repo-clone">
+                <span class="star"></span> View on GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="repo-card">
+          <div class="repo-titlebar">
+            <div class="repo-dots"><span></span><span></span><span></span></div>
+            <span class="title">~/car-showroom-websites</span>
+          </div>
+          <div class="repo-body">
+            <div class="repo-prompt"><span class="cmd">$</span> cat README.md</div>
+            <h3>Car Showroom Websites</h3>
+            <p>A polished car showroom website with responsive layouts, vehicle listings, and dynamic filtering. Built with TypeScript and modern CSS.</p>
+            <div class="repo-tags">
+              <span>--typescript</span>
+              <span>--css</span>
+              <span>--javascript</span>
+            </div>
+            <div class="repo-actions">
+              <a href="https://github.com/mwemmz/car-showroom-websites" target="_blank" rel="noopener noreferrer" class="repo-clone">
                 <span class="star"></span> View on GitHub
               </a>
             </div>
