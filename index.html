@@ -37,6 +37,7 @@
       --line: #dcdfe7; --sunk: #f6f7fa; --pop: #ffffff; --btn: #3b3f4b;
       color-scheme: light;
     }
+    .wtitle { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--mute); letter-spacing: .02em; min-width: 0; white-space: nowrap; overflow: hidden; }
     .themebtn { margin-left: auto; align-self: center; margin-right: 10px; display: grid; place-items: center; width: 28px; height: 26px; border-radius: 6px; color: var(--mute); flex: none; transition: background .15s, color .15s; }
     .themebtn:hover { background: var(--hov1); color: var(--ink); }
     .themebtn svg { width: 16px; height: 16px; }
@@ -266,6 +267,19 @@
       .detail { transition: none; }
     }
 
+    /* ── Desktop: sidebar is the only navigation, the card fills the editor ── */
+    @media (min-width: 981px) {
+      .tabs { display: none; }
+      .steps, .menubtn, .menu { display: none; }
+      .pill #prev, .pill #next, .pill .sep { display: none; }
+      .pill { padding: calc(var(--u) * .7) calc(var(--u) * 1.1); gap: calc(var(--u) * .8); left: 26%; bottom: calc(var(--u) * 5); }
+      .stage { overflow-x: hidden; background: linear-gradient(var(--c1) 58%, var(--c2)); }
+      .card { --w: min(100cqw, calc(100cqh * 1.5)); --u: calc(var(--w) / 100); width: 100cqw; height: 100cqh; }
+      .cardbg { border-radius: 0; box-shadow: none; }
+      .blobwrap { border-radius: 0; }
+      .logo { left: calc(var(--u) * 6); } 
+    }
+
     /* ── Phones & narrow windows ── */
     @media (max-width: 980px) {
       .side, .crumb { display: none; }
@@ -309,6 +323,7 @@
   <header class="titlebar">
     <div class="lights" aria-hidden="true"><i></i><i></i><i></i></div>
     <nav class="tabs" id="tabs" aria-label="Open files"></nav>
+    <div class="wtitle">mwemmz / portfolio</div>
     <button class="themebtn" id="themebtn" type="button" aria-label="Switch to light theme" title="Toggle light / dark"></button>
   </header>
   <div class="shell">
@@ -677,7 +692,7 @@
 
     /* ── Blob morph ─────────────────────────────── */
     const cur = { pts: BL[0].map((p) => p.slice()), a: rgb(PAL.purple.a), b: rgb(PAL.purple.b) };
-    function drawBlob() { blobEl.setAttribute('d', smooth(cur.pts)); s1.setAttribute('stop-color', hex(cur.a)); s2.setAttribute('stop-color', hex(cur.b)); }
+    function drawBlob() { card.style.setProperty('--b1', hex(cur.a)); blobEl.setAttribute('d', smooth(cur.pts)); s1.setAttribute('stop-color', hex(cur.a)); s2.setAttribute('stop-color', hex(cur.b)); }
     function morph(to, ms) {
       if (reduce || ms === 0) { cur.pts = to.pts.map((p) => p.slice()); cur.a = to.a; cur.b = to.b; drawBlob(); return Promise.resolve(); }
       const from = { pts: cur.pts.map((p) => p.slice()), a: cur.a.slice(), b: cur.b.slice() }, t0 = performance.now();
