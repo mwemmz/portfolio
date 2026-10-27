@@ -37,10 +37,6 @@
       --line: #dcdfe7; --sunk: #f6f7fa; --pop: #ffffff; --btn: #3b3f4b;
       color-scheme: light;
     }
-    .wtitle { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--mute); letter-spacing: .02em; min-width: 0; white-space: nowrap; overflow: hidden; }
-    .themebtn { margin-left: auto; align-self: center; margin-right: 10px; display: grid; place-items: center; width: 28px; height: 26px; border-radius: 6px; color: var(--mute); flex: none; transition: background .15s, color .15s; }
-    .themebtn:hover { background: var(--hov1); color: var(--ink); }
-    .themebtn svg { width: 16px; height: 16px; }
 
     html, body { height: 100%; }
     body {
@@ -49,53 +45,20 @@
       background: var(--bg);
       overflow: hidden;
       -webkit-font-smoothing: antialiased;
-      display: flex; flex-direction: column; height: 100dvh;
+      height: 100dvh;
     }
 
-    /* ── VS Code shell ── */
-    .titlebar { display: flex; align-items: stretch; height: 36px; flex: none; background: var(--bg); border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 12px; }
-    .lights { display: flex; align-items: center; gap: 8px; padding: 0 14px; flex: none; }
-    .lights i { width: 12px; height: 12px; border-radius: 50%; }
-    .lights i:nth-child(1) { background: #ff5f57; } .lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
-    .tabs { display: flex; overflow-x: auto; scrollbar-width: none; min-width: 0; }
-    .tabs::-webkit-scrollbar { display: none; }
-    .tab { display: flex; align-items: center; gap: 8px; padding: 0 16px; color: var(--mute); border-right: 1px solid var(--border); white-space: nowrap; position: relative; transition: color .15s, background .15s; }
-    .tab:hover { color: var(--ink); background: var(--hov0); }
-    .tab.active { color: var(--ink); background: var(--surface); }
-    .tab.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--sacc); }
-    .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
-    .shell { display: flex; flex: 1; min-height: 0; }
-    .side { width: 232px; flex: none; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; scrollbar-width: none; font-family: var(--mono); font-size: 12px; }
-    .side::-webkit-scrollbar { display: none; }
-    .side h2 { font-weight: 500; font-size: 11px; letter-spacing: .08em; color: var(--mute); padding: 12px 16px 8px; border-bottom: 1px solid var(--border); }
-    .tree { padding: 8px 0; }
-    .tree .fold { display: flex; align-items: center; gap: 6px; padding: 4px 12px; color: var(--ink); }
-    .tree .fold svg { width: 12px; height: 12px; opacity: .7; flex: none; }
-    .tree .file { display: flex; align-items: center; gap: 8px; width: 100%; padding: 4px 16px 4px 30px; color: var(--mute); text-align: left; transition: color .15s, background .15s; }
-    .tree .file.in { padding-left: 46px; }
-    .tree .file:hover { color: var(--ink); background: var(--hov0); }
-    .tree .file[aria-current="true"] { color: var(--ink); background: var(--hov1); box-shadow: inset 2px 0 var(--sacc); }
-    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-    .crumb { flex: none; padding: 6px 16px; font-family: var(--mono); font-size: 11.5px; color: var(--mute); background: var(--surface); border-bottom: 1px solid var(--border); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .crumb b { font-weight: 400; color: var(--ink); }
-    .status { flex: none; height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 0; background: var(--surface); border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--mute); }
-    .status span { display: inline-flex; align-items: center; gap: 6px; }
-    .status .br { background: var(--sacc); color: #fff; height: 100%; padding: 0 12px; transition: background .5s; }
-    .status .br svg { width: 12px; height: 12px; }
-    .status .r { gap: 16px; }
     button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
     a { color: inherit; }
     .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
     /* ── Stage & card (everything scales with --u = 1% of card width) ── */
-    .stage { flex: 1; min-height: 0; container-type: size; display: grid; place-items: center; overflow: auto; background: radial-gradient(90% 80% at 50% 0%, var(--st1), var(--bg)); }
+    .stage { position: fixed; inset: 0; overflow: hidden; background: var(--c2); }
     .card {
-      --w: min(1280px, 96cqw, calc((100cqh - 28px) * 1.5));
+      --w: min(100vw, calc(100dvh * 1.5));
       --u: calc(var(--w) / 100);
       --acc: #6d4aff;
-      position: relative;
-      width: var(--w);
-      height: calc(var(--w) / 1.5);
+      position: absolute; inset: 0;
     }
     .cardbg {
       position: absolute; inset: 0;
@@ -229,7 +192,7 @@
       width: calc(var(--u) * 6.2); height: calc(var(--u) * 6.2); background: var(--acc); color: #fff;
       box-shadow: 0 calc(var(--u) * .6) calc(var(--u) * 1.4) rgba(20, 20, 40, .3); transition: transform .3s, background .2s;
     }
-    .pill .go:hover { filter: brightness(1.12); transform: translateX(calc(var(--u) * .25)); }
+    .pill .go:hover, .pill .go:focus-visible { background: var(--acc); filter: brightness(1.12); transform: translateX(calc(var(--u) * .25)); }
     .ic { width: calc(var(--u) * 2.1); height: calc(var(--u) * 2.1); display: block; }
 
     .steps { position: absolute; left: calc(var(--u) * 5); bottom: calc(var(--u) * 4.9); z-index: 6; display: flex; align-items: center; gap: calc(var(--u) * .6); }
@@ -267,26 +230,50 @@
       .detail { transition: none; }
     }
 
-    /* ── Desktop: sidebar is the only navigation, the card fills the editor ── */
+    /* ── Explorer (glass), status, theme toggle ── */
+    .expl {
+      position: absolute; left: calc(var(--u) * 4.9); bottom: calc(var(--u) * 5); width: calc(var(--u) * 23); z-index: 6;
+      padding: calc(var(--u) * 1.2) calc(var(--u) * .8) calc(var(--u) * 1); border-radius: calc(var(--u) * 2.1);
+      font-family: var(--mono); color: #fff;
+      background: rgba(34, 20, 100, .38); border: 1px solid rgba(255, 255, 255, .3);
+      box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 3.6) rgba(30, 10, 90, .3), inset 0 1px 0 rgba(255, 255, 255, .3);
+      -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+    }
+    :root[data-theme="light"] .expl { background: rgba(78, 52, 205, .86); }
+    .expl h2 { display: flex; justify-content: space-between; padding: calc(var(--u) * .15) calc(var(--u) * 1) calc(var(--u) * .7); font-weight: 400; font-size: calc(var(--u) * .85); letter-spacing: .1em; color: rgba(255, 255, 255, .75); }
+    .tree .fold { display: flex; align-items: center; gap: calc(var(--u) * .5); height: calc(var(--u) * 2.15); padding: 0 calc(var(--u) * 1); font-size: calc(var(--u) * .94); color: #fff; }
+    .tree .fold svg { width: calc(var(--u) * .9); height: calc(var(--u) * .9); opacity: .8; flex: none; }
+    .tree .file { display: flex; align-items: center; gap: calc(var(--u) * .7); width: 100%; height: calc(var(--u) * 2.15); padding: 0 calc(var(--u) * 1) 0 calc(var(--u) * 2.2); margin: 1px 0; border-radius: calc(var(--u) * .85); font-size: calc(var(--u) * .94); color: rgba(255, 255, 255, .78); text-align: left; transition: background .2s, color .2s; }
+    .tree .file.in { padding-left: calc(var(--u) * 3.5); }
+    .tree .file:hover { background: rgba(255, 255, 255, .12); color: #fff; }
+    .tree .file[aria-current="true"] { background: rgba(255, 255, 255, .26); color: #fff; }
+    .dot { width: calc(var(--u) * .65); height: calc(var(--u) * .65); border-radius: 50%; flex: none; display: block; }
+    .status { position: absolute; right: calc(var(--u) * 4.9); bottom: calc(var(--u) * 3.6); z-index: 6; display: flex; align-items: center; gap: calc(var(--u) * 1.3); font-family: var(--mono); font-size: calc(var(--u) * .92); color: var(--mute); }
+    .status .br { display: inline-flex; align-items: center; gap: calc(var(--u) * .6); }
+    .status .br::before { content: ''; width: calc(var(--u) * .6); height: calc(var(--u) * .6); border-radius: 50%; background: var(--acc); }
+    .themebtn { display: grid; place-items: center; width: calc(var(--u) * 3.7); height: calc(var(--u) * 3.7); border-radius: calc(var(--u) * 1.2); background: var(--chip); color: var(--ink); transition: background .2s; }
+    .themebtn:hover { background: var(--chip2); }
+    .themebtn svg { width: calc(var(--u) * 1.7); height: calc(var(--u) * 1.7); }
+
+    /* ── Desktop: the explorer is the navigation ── */
     @media (min-width: 981px) {
-      .tabs { display: none; }
       .steps, .menubtn, .menu { display: none; }
-      .pill #prev, .pill #next, .pill .sep { display: none; }
-      .pill { padding: calc(var(--u) * .7) calc(var(--u) * 1.1); gap: calc(var(--u) * .8); left: 26%; bottom: calc(var(--u) * 5); }
-      .stage { overflow-x: hidden; background: linear-gradient(var(--c1) 58%, var(--c2)); }
-      .card { --w: min(100cqw, calc(100cqh * 1.5)); --u: calc(var(--w) / 100); width: 100cqw; height: 100cqh; }
       .cardbg { border-radius: 0; box-shadow: none; }
       .blobwrap { border-radius: 0; }
-      .logo { left: calc(var(--u) * 6); } 
+      .logo { left: calc(var(--u) * 6); }
+      .pill { left: 39%; bottom: calc(var(--u) * 3.9); }
     }
 
     /* ── Phones & narrow windows ── */
     @media (max-width: 980px) {
-      .side, .crumb { display: none; }
-      .stage { place-items: start center; }
-      .card { --w: calc(100cqw - 16px); --u: calc(var(--w) / 40); height: calc(100cqh - 16px); min-height: 560px; margin: 8px 0; }
-      .cardbg { border-radius: calc(var(--u) * 3); }
-      .blobwrap { width: 100%; height: 44%; border-radius: calc(var(--u) * 3) calc(var(--u) * 3) 0 0; }
+      .expl, .status > span, .status .br { display: none; }
+      .stage { overflow: auto; }
+      .card { --w: 100vw; --u: calc(var(--w) / 40); min-height: 560px; }
+      .cardbg { border-radius: 0; }
+      .status { right: auto; bottom: auto; left: calc(var(--u) * 8.4); top: calc(var(--u) * 2.9); }
+      .themebtn { width: calc(var(--u) * 4.2); height: calc(var(--u) * 4.2); border-radius: calc(var(--u) * 1.3); background: rgba(255, 255, 255, .22); color: #fff; }
+      .themebtn svg { width: calc(var(--u) * 2); height: calc(var(--u) * 2); }
+      .blobwrap { width: 100%; height: 44%; border-radius: 0; }
       .logo { left: calc(var(--u) * 5); top: calc(var(--u) * 3.6); width: calc(var(--u) * 2.2); }
       .avatar { right: calc(var(--u) * 4.4); top: calc(var(--u) * 3); width: calc(var(--u) * 4); height: calc(var(--u) * 4); }
       .headline { left: calc(var(--u) * 5); top: 11.5%; font-size: calc(var(--u) * 4.1); }
@@ -320,19 +307,6 @@
   <h1 class="sr">Chimwemwe Siyingwa — Developer Portfolio</h1>
   <p class="sr" id="live" aria-live="polite"></p>
 
-  <header class="titlebar">
-    <div class="lights" aria-hidden="true"><i></i><i></i><i></i></div>
-    <nav class="tabs" id="tabs" aria-label="Open files"></nav>
-    <div class="wtitle">mwemmz / portfolio</div>
-    <button class="themebtn" id="themebtn" type="button" aria-label="Switch to light theme" title="Toggle light / dark"></button>
-  </header>
-  <div class="shell">
-    <aside class="side" aria-label="Explorer">
-      <h2>EXPLORER</h2>
-      <div class="tree" id="tree"></div>
-    </aside>
-    <div class="main">
-    <div class="crumb" id="crumb"></div>
   <div class="stage">
     <main class="card" id="card">
       <div class="cardbg"></div>
@@ -380,13 +354,15 @@
       <button class="menubtn" id="menubtn" type="button" aria-label="All sections" aria-expanded="false" aria-controls="menu"></button>
       <ul class="menu" id="menu" hidden></ul>
       <span id="probe" aria-hidden="true" style="position:absolute;visibility:hidden;width:var(--u);height:0;left:0;top:0"></span>
+      <aside class="expl" aria-label="Explorer">
+        <h2><span>EXPLORER</span><span>portfolio</span></h2>
+        <div class="tree" id="tree"></div>
+      </aside>
+      <div class="status">
+        <span class="br" id="stbr"></span><span id="stpos"></span>
+        <button class="themebtn" id="themebtn" type="button" aria-label="Switch to light theme" title="Toggle light / dark"></button>
+      </div>
     </main>
-  </div>
-    <footer class="status">
-      <span class="br" id="stbr"></span>
-      <span class="r"><span id="stpos"></span><span>UTF-8</span><span>Lusaka, ZM</span></span>
-    </footer>
-    </div>
   </div>
 
   <noscript>Chimwemwe Siyingwa is a software developer and third-year IS&amp;T student at the University of Lusaka. Find the work on <a href="https://github.com/mwemmz">GitHub</a> or <a href="https://www.linkedin.com/in/chimwemwe-siyingwa-97b627352">LinkedIn</a>. This portfolio needs JavaScript to run its slides.</noscript>
@@ -624,9 +600,9 @@
     ];
 
     const LAYOUTS = [
-      [{ t: 'cube', k: 0, d: [35, 5], m: [47, 9], z: 9, zm: 7 }, { t: 'sphere', k: 1, d: [22, 58], m: [14, 36], z: 8, zm: 6 }, { t: 'ring', k: 1, d: [47, 52], m: [90, 40], z: 7, zm: 6 }],
-      [{ t: 'sphere', k: 1, d: [40, 6], m: [50, 6], z: 8, zm: 6 }, { t: 'pill', k: 0, d: [16, 57], m: [12, 38], z: 9, zm: 7 }, { t: 'cube', k: 1, d: [47, 57], m: [88, 38], z: 7, zm: 6 }],
-      [{ t: 'pill', k: 1, d: [33, 4], m: [44, 8], z: 9, zm: 7 }, { t: 'ring', k: 0, d: [19, 58], m: [14, 38], z: 8, zm: 6 }, { t: 'sphere', k: 0, d: [48, 54], m: [88, 40], z: 7, zm: 6 }]
+      [{ t: 'cube', k: 0, d: [35, 5], m: [47, 9], z: 9, zm: 7 }, { t: 'sphere', k: 1, d: [33, 76], m: [14, 36], z: 8, zm: 6 }, { t: 'ring', k: 1, d: [47, 52], m: [90, 40], z: 7, zm: 6 }],
+      [{ t: 'sphere', k: 1, d: [40, 6], m: [50, 6], z: 8, zm: 6 }, { t: 'pill', k: 0, d: [31, 42], m: [12, 38], z: 9, zm: 7 }, { t: 'cube', k: 1, d: [47, 57], m: [88, 38], z: 7, zm: 6 }],
+      [{ t: 'pill', k: 1, d: [33, 4], m: [44, 8], z: 9, zm: 7 }, { t: 'ring', k: 0, d: [31, 44], m: [14, 38], z: 8, zm: 6 }, { t: 'sphere', k: 0, d: [48, 54], m: [88, 40], z: 7, zm: 6 }]
     ];
 
     /* ── Elements ───────────────────────────────── */
@@ -644,28 +620,18 @@
     const dotc = (S) => `<i class="dot" style="background:${(PAL[CLAY[S.pal] || S.pal]).m}"></i>`;
     const fold = (t, open = true) => `<div class="fold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${open ? 'M6 9l6 6 6-6' : 'M9 6l6 6-6 6'}"/></svg>${t}</div>`;
     const fileBtn = (S, i, inner) => `<button class="file${inner ? ' in' : ''}" type="button" data-go="${i}">${dotc(S)}<span>${EXT[S.id]}</span></button>`;
-    const stree = $('#tree'), tabsEl = $('#tabs'), crumb = $('#crumb'), stbr = $('#stbr'), stpos = $('#stpos');
+    const stree = $('#tree'), stbr = $('#stbr'), stpos = $('#stpos');
     stree.innerHTML = fold('portfolio') +
       SL.map((S, i) => (i < 2 ? fileBtn(S, i, false) : '')).join('') +
       '<div class="fold" style="padding-left:28px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>projects</div>' +
       SL.map((S, i) => (PROJ.includes(S.id) ? fileBtn(S, i, true) : '')).join('') +
       SL.map((S, i) => (i >= 2 && !PROJ.includes(S.id) ? fileBtn(S, i, false) : '')).join('');
-    tabsEl.innerHTML = SL.map((S, i) => `<button class="tab" type="button" data-go="${i}">${dotc(S)}${EXT[S.id]}</button>`).join('');
-    document.addEventListener('click', (e) => {
-      const b = e.target.closest('.side [data-go], .tabs [data-go]');
-      if (b) { const n = +b.dataset.go; go(n, n >= idx ? 1 : -1); }
-    });
     function shellSync(n) {
-      const S = SL[n], acc = S.pal === 'navy' ? '#ff6a47' : PAL[S.pal].acc;
-      document.documentElement.style.setProperty('--sacc', acc);
-      document.querySelectorAll('.side .file, .tabs .tab').forEach((x) => {
+      document.querySelectorAll('.expl .file').forEach((x) => {
         const on = +x.dataset.go === n;
-        x.classList.toggle('active', on);
         on ? x.setAttribute('aria-current', 'true') : x.removeAttribute('aria-current');
-        if (on && x.classList.contains('tab')) x.scrollIntoView({ block: 'nearest', inline: 'nearest' });
       });
-      crumb.innerHTML = `portfolio › ${PROJ.includes(S.id) ? 'projects › ' : ''}<b>${EXT[S.id]}</b>`;
-      stbr.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON.branch}</svg>master`;
+      stbr.textContent = 'master';
       stpos.textContent = `Slide ${n + 1} of ${SL.length}`;
     }
 
@@ -739,7 +705,7 @@
 
     /* ── Objects ────────────────────────────────── */
     function buildFx(S, n, withPebble) {
-      const clay = CLAY[S.pal] || S.pal, alt = ALT[clay] || 'pink', out = [];
+      const clay = S.pal === 'purple' ? 'yellow' : (CLAY[S.pal] || S.pal), alt = ALT[clay] || 'pink', out = [];
       const mk = (cls, d, m, z, zm, html, fd) => {
         const el = document.createElement('div');
         el.className = 'o ' + cls;
@@ -747,8 +713,8 @@
         el.innerHTML = `<div class="fl" style="--fd:${fd}s">${html}</div>`;
         return el;
       };
-      if (withPebble) out.push(mk('static', [9.5, 51], [11, 41], 8, 6, ORB.pebble()));
-      out.push(mk('hero', [39, 57], [70, 22], 25, 26, HERO[S.hero](clay), 7));
+      if (withPebble) out.push(mk('static', [10, 42], [11, 41], 8, 6, ORB.pebble()));
+      out.push(mk('hero', [42, 56], [70, 22], 28, 26, HERO[S.hero](clay), 7));
       LAYOUTS[n % 3].forEach((o, i) => out.push(mk('orb', o.d, o.m, o.z, o.zm, ORB[o.t](o.k ? alt : clay), 5 + i * 1.3)));
       return out;
     }
@@ -800,7 +766,7 @@
     }
     function chrome(n) {
       const S = SL[n], P = PAL[S.pal];
-      card.style.setProperty('--acc', S.pal === 'navy' ? '#ff6a47' : P.acc);
+      card.style.setProperty('--acc', '#6d4aff');
       const a = (n + 1) % SL.length, b = (n + 2) % SL.length;
       steps.innerHTML = `<button class="cur" type="button" aria-label="Current section: ${esc(S.label)}" data-go="${n}">${ico(S.icon)}</button><i class="dash"></i><button class="sm" type="button" data-go="${a}" aria-label="${esc(SL[a].label)}">${ico(SL[a].icon)}</button><i class="dash"></i><button class="sm" type="button" data-go="${b}" aria-label="${esc(SL[b].label)}">${ico(SL[b].icon)}</button>`;
       menu.querySelectorAll('button').forEach((x, i) => (i === n ? x.setAttribute('aria-current', 'true') : x.removeAttribute('aria-current')));
@@ -815,7 +781,7 @@
       const S = SL[n], U = uPx();
       chrome(n);
       await Promise.all([
-        morph({ pts: BL[n], a: rgb(PAL[S.pal].a), b: rgb(PAL[S.pal].b) }, first ? 0 : 900),
+        morph({ pts: BL[n], a: rgb(PAL.purple.a), b: rgb(PAL.purple.b) }, first ? 0 : 900),
         swapHead(S, d, first), swapPanel(S, d, first, U), swapFx(S, n, d, first, U)
       ]);
       idx = n; busy = false;
