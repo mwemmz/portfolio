@@ -5,37 +5,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Chimwemwe Siyingwa — Developer Portfolio</title>
   <meta name="description" content="Software developer building solutions that solve real problems. Third-year IS&T student, junior developer, and open source contributor.">
-  <meta name="theme-color" content="#ececf1">
+  <meta name="theme-color" content="#08090c">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Lexend:wght@300;400;500&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --ink: #16151f;
-      --mute: #6f6f7c;
-      --soft: #8d8d99;
-      --band: #f4f4f7;
-      --chip: #efeff3;
+      --ink: #d4dae2;
+      --mute: #8b949e;
+      --soft: #6e7681;
+      --band: #1b222c;
+      --chip: #232b37;
+      --bg: #08090c;
+      --surface: #11151b;
+      --border: #232a35;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+      --sacc: #6d4aff;
     }
 
     html, body { height: 100%; }
     body {
       font-family: 'Lexend', system-ui, -apple-system, 'Segoe UI', sans-serif;
       color: var(--ink);
-      background: radial-gradient(120% 100% at 50% 0%, #f6f6f9 0%, #e8e8ee 100%);
+      background: var(--bg);
       overflow: hidden;
       -webkit-font-smoothing: antialiased;
+      display: flex; flex-direction: column; height: 100dvh;
     }
+
+    /* ── VS Code shell ── */
+    .titlebar { display: flex; align-items: stretch; height: 36px; flex: none; background: var(--bg); border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 12px; }
+    .lights { display: flex; align-items: center; gap: 8px; padding: 0 14px; flex: none; }
+    .lights i { width: 12px; height: 12px; border-radius: 50%; }
+    .lights i:nth-child(1) { background: #ff5f57; } .lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+    .tabs { display: flex; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab { display: flex; align-items: center; gap: 8px; padding: 0 16px; color: var(--mute); border-right: 1px solid var(--border); white-space: nowrap; position: relative; transition: color .15s, background .15s; }
+    .tab:hover { color: var(--ink); background: rgba(255, 255, 255, .03); }
+    .tab.active { color: #fff; background: var(--surface); }
+    .tab.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--sacc); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+    .shell { display: flex; flex: 1; min-height: 0; }
+    .side { width: 232px; flex: none; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; scrollbar-width: none; font-family: var(--mono); font-size: 12px; }
+    .side::-webkit-scrollbar { display: none; }
+    .side h2 { font-weight: 500; font-size: 11px; letter-spacing: .08em; color: var(--mute); padding: 12px 16px 8px; border-bottom: 1px solid var(--border); }
+    .tree { padding: 8px 0; }
+    .tree .fold { display: flex; align-items: center; gap: 6px; padding: 4px 12px; color: var(--ink); }
+    .tree .fold svg { width: 12px; height: 12px; opacity: .7; flex: none; }
+    .tree .file { display: flex; align-items: center; gap: 8px; width: 100%; padding: 4px 16px 4px 30px; color: var(--mute); text-align: left; transition: color .15s, background .15s; }
+    .tree .file.in { padding-left: 46px; }
+    .tree .file:hover { color: var(--ink); background: rgba(255, 255, 255, .03); }
+    .tree .file[aria-current="true"] { color: #fff; background: rgba(255, 255, 255, .06); box-shadow: inset 2px 0 var(--sacc); }
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .crumb { flex: none; padding: 6px 16px; font-family: var(--mono); font-size: 11.5px; color: var(--mute); background: var(--surface); border-bottom: 1px solid var(--border); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .crumb b { font-weight: 400; color: var(--ink); }
+    .status { flex: none; height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 0; background: var(--surface); border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--mute); }
+    .status span { display: inline-flex; align-items: center; gap: 6px; }
+    .status .br { background: var(--sacc); color: #fff; height: 100%; padding: 0 12px; transition: background .5s; }
+    .status .br svg { width: 12px; height: 12px; }
+    .status .r { gap: 16px; }
     button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
     a { color: inherit; }
     .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
     /* ── Stage & card (everything scales with --u = 1% of card width) ── */
-    .stage { height: 100dvh; display: grid; place-items: center; }
+    .stage { flex: 1; min-height: 0; container-type: size; display: grid; place-items: center; overflow: auto; background: radial-gradient(90% 80% at 50% 0%, #121720, var(--bg)); }
     .card {
-      --w: min(1280px, 94vw, calc((100dvh - 40px) * 1.5));
+      --w: min(1280px, 96cqw, calc((100cqh - 28px) * 1.5));
       --u: calc(var(--w) / 100);
       --acc: #6d4aff;
       position: relative;
@@ -45,8 +83,8 @@
     .cardbg {
       position: absolute; inset: 0;
       border-radius: calc(var(--u) * 5.6);
-      background: linear-gradient(#fff 58%, #f3f3f6);
-      box-shadow: 0 calc(var(--u) * 3.2) calc(var(--u) * 7) rgba(40, 40, 80, .12), 0 calc(var(--u) * .4) calc(var(--u) * 1.2) rgba(40, 40, 80, .06);
+      background: linear-gradient(#181e27 58%, #10141b);
+      box-shadow: 0 calc(var(--u) * 3.2) calc(var(--u) * 7) rgba(0, 0, 0, .55), 0 0 0 1px #262e3a;
       animation: pop .9s cubic-bezier(.2, .9, .25, 1) both;
     }
     @keyframes pop { from { opacity: 0; transform: translateY(calc(var(--u) * 2)) scale(.985); } }
@@ -122,7 +160,7 @@
       mask-image: linear-gradient(#000 calc(100% - var(--u) * 17), transparent calc(100% - var(--u) * 5));
     }
     .list::-webkit-scrollbar { display: none; }
-    .item:nth-child(odd) { background: linear-gradient(90deg, rgba(244, 244, 247, 0), var(--band) calc(var(--u) * 4.5)); }
+    .item:nth-child(odd) { background: linear-gradient(90deg, rgba(27, 34, 44, 0), var(--band) calc(var(--u) * 4.5)); }
     .row {
       display: grid; grid-template-columns: 1fr calc(var(--u) * 9) calc(var(--u) * 6.6) calc(var(--u) * 5);
       align-items: center; width: 100%; min-height: calc(var(--u) * 7.6);
@@ -147,52 +185,52 @@
     .detail > div { padding-bottom: calc(var(--u) * 1.6); }
     .lk {
       display: inline-flex; align-items: center; gap: .4em; margin: .9em .7em 0 0; padding: .5em 1.1em;
-      border: 1px solid #e0e0e8; border-radius: 99px; background: #fff; color: var(--ink);
+      border: 1px solid #2c3441; border-radius: 99px; background: #11151b; color: var(--ink);
       text-decoration: none; font-size: calc(var(--u) * 1.25); transition: border-color .2s, color .2s;
     }
     .lk:hover { border-color: var(--acc); color: var(--acc); }
     .lk .ic { width: 1.1em; height: 1.1em; }
     .chips { display: flex; flex-wrap: wrap; gap: .5em; margin-top: .3em; }
-    .chips span { padding: .3em .9em; border-radius: 99px; background: #fff; border: 1px solid #e6e6ee; color: var(--ink); font-size: .95em; }
+    .chips span { padding: .3em .9em; border-radius: 99px; background: #11151b; border: 1px solid #2c3441; color: var(--ink); font-size: .95em; }
 
     /* ── Bottom UI ── */
     .pill {
       position: absolute; left: 59%; translate: -50% 0; bottom: calc(var(--u) * 7.6); z-index: 6;
       display: flex; align-items: center; gap: calc(var(--u) * .4);
       padding: calc(var(--u) * .7) calc(var(--u) * .7) calc(var(--u) * .7) calc(var(--u) * 1.6);
-      background: #fff; border-radius: 99px;
-      box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 3.6) rgba(30, 30, 60, .14), 0 0 0 1px rgba(30, 30, 60, .03);
+      background: #1d242e; border-radius: 99px;
+      box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 3.6) rgba(0, 0, 0, .5), 0 0 0 1px #2c3441;
     }
     .pill > button, .pill > a {
       display: grid; place-items: center; width: calc(var(--u) * 4.6); height: calc(var(--u) * 4.6);
-      border-radius: 50%; color: #3b3a48; transition: background .2s, color .2s;
+      border-radius: 50%; color: #c3cad3; transition: background .2s, color .2s;
     }
     .pill > button:hover, .pill > a:hover { background: var(--chip); }
     .pill #mail { color: var(--acc); }
-    .pill .sep { width: 1px; height: calc(var(--u) * 3.4); background: #e4e4eb; margin: 0 calc(var(--u) * .5) 0 calc(var(--u) * .3); }
+    .pill .sep { width: 1px; height: calc(var(--u) * 3.4); background: #2c3441; margin: 0 calc(var(--u) * .5) 0 calc(var(--u) * .3); }
     .pill .go {
-      width: calc(var(--u) * 6.2); height: calc(var(--u) * 6.2); background: #2a2a33; color: #fff;
+      width: calc(var(--u) * 6.2); height: calc(var(--u) * 6.2); background: var(--acc); color: #fff;
       box-shadow: 0 calc(var(--u) * .6) calc(var(--u) * 1.4) rgba(20, 20, 40, .3); transition: transform .3s, background .2s;
     }
-    .pill .go:hover { background: #000; transform: translateX(calc(var(--u) * .25)); }
+    .pill .go:hover { filter: brightness(1.12); transform: translateX(calc(var(--u) * .25)); }
     .ic { width: calc(var(--u) * 2.1); height: calc(var(--u) * 2.1); display: block; }
 
     .steps { position: absolute; left: calc(var(--u) * 5); bottom: calc(var(--u) * 4.9); z-index: 6; display: flex; align-items: center; gap: calc(var(--u) * .6); }
     .steps .cur, .menubtn {
       display: grid; place-items: center; width: calc(var(--u) * 6.2); height: calc(var(--u) * 6.2);
-      background: var(--chip); border-radius: calc(var(--u) * 1.7); color: #2f2e3b; transition: background .2s;
+      background: var(--chip); border-radius: calc(var(--u) * 1.7); color: #d4dae2; transition: background .2s;
     }
-    .steps .cur:hover, .menubtn:hover { background: #e6e6ec; }
-    .steps .sm { display: grid; place-items: center; width: calc(var(--u) * 3); height: calc(var(--u) * 3); color: #5d5c69; opacity: .8; transition: opacity .2s; }
+    .steps .cur:hover, .menubtn:hover { background: #2d3643; }
+    .steps .sm { display: grid; place-items: center; width: calc(var(--u) * 3); height: calc(var(--u) * 3); color: #98a1ad; opacity: .8; transition: opacity .2s; }
     .steps .sm:hover { opacity: 1; }
     .steps .sm .ic { width: calc(var(--u) * 1.8); height: calc(var(--u) * 1.8); }
-    .steps .dash { width: calc(var(--u) * 1.9); height: 1px; background: #5d5c69; opacity: .55; }
+    .steps .dash { width: calc(var(--u) * 1.9); height: 1px; background: #98a1ad; opacity: .55; }
     .menubtn { position: absolute; right: calc(var(--u) * 5); bottom: calc(var(--u) * 4.9); z-index: 6; }
 
     .menu {
       position: absolute; right: calc(var(--u) * 5); bottom: calc(var(--u) * 12); z-index: 8; min-width: calc(var(--u) * 24);
-      padding: calc(var(--u) * .8); background: #fff; border-radius: calc(var(--u) * 2.4);
-      box-shadow: 0 calc(var(--u) * 1.6) calc(var(--u) * 4) rgba(30, 30, 60, .18); list-style: none;
+      padding: calc(var(--u) * .8); background: #1d242e; border: 1px solid #2c3441; border-radius: calc(var(--u) * 2.4);
+      box-shadow: 0 calc(var(--u) * 1.6) calc(var(--u) * 4) rgba(0, 0, 0, .55); list-style: none;
     }
     .menu[hidden] { display: none; }
     .menu button {
@@ -204,7 +242,7 @@
     .menu small { margin-left: auto; color: var(--soft); font-size: .8em; }
 
     :focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; border-radius: 10px; }
-    noscript { position: fixed; inset: auto 16px 16px 16px; padding: 14px 16px; background: #fff; border-radius: 14px; font-size: 14px; z-index: 20; }
+    noscript { position: fixed; inset: auto 16px 16px 16px; padding: 14px 16px; background: #1d242e; color: #d4dae2; border-radius: 14px; font-size: 14px; z-index: 20; }
 
     @media (prefers-reduced-motion: reduce) {
       .cardbg { animation: none; }
@@ -213,8 +251,10 @@
     }
 
     /* ── Phones & narrow windows ── */
-    @media (max-width: 860px) {
-      .card { --w: calc(100vw - 20px); --u: calc(var(--w) / 40); height: calc(100dvh - 20px); min-height: 560px; }
+    @media (max-width: 980px) {
+      .side, .crumb { display: none; }
+      .stage { place-items: start center; }
+      .card { --w: calc(100cqw - 16px); --u: calc(var(--w) / 40); height: calc(100cqh - 16px); min-height: 560px; margin: 8px 0; }
       .cardbg { border-radius: calc(var(--u) * 3); }
       .blobwrap { width: 100%; height: 44%; border-radius: calc(var(--u) * 3) calc(var(--u) * 3) 0 0; }
       .logo { left: calc(var(--u) * 5); top: calc(var(--u) * 3.6); width: calc(var(--u) * 2.2); }
@@ -232,7 +272,7 @@
       .row .mt { font-size: calc(var(--u) * 1.1); }
       .row .th svg { width: calc(var(--u) * 4); height: calc(var(--u) * 4); }
       .detail { padding-left: calc(var(--u) * 5); font-size: calc(var(--u) * 1.35); }
-      .item:nth-child(odd) { background: linear-gradient(90deg, rgba(244, 244, 247, 0), var(--band) calc(var(--u) * 3)); }
+      .item:nth-child(odd) { background: linear-gradient(90deg, rgba(27, 34, 44, 0), var(--band) calc(var(--u) * 3)); }
       .pill { left: 50%; bottom: calc(var(--u) * 3.2); }
       .pill > button, .pill > a { width: calc(var(--u) * 4.4); height: calc(var(--u) * 4.4); }
       .pill .go { width: calc(var(--u) * 5.6); height: calc(var(--u) * 5.6); }
@@ -250,6 +290,17 @@
   <h1 class="sr">Chimwemwe Siyingwa — Developer Portfolio</h1>
   <p class="sr" id="live" aria-live="polite"></p>
 
+  <header class="titlebar">
+    <div class="lights" aria-hidden="true"><i></i><i></i><i></i></div>
+    <nav class="tabs" id="tabs" aria-label="Open files"></nav>
+  </header>
+  <div class="shell">
+    <aside class="side" aria-label="Explorer">
+      <h2>EXPLORER</h2>
+      <div class="tree" id="tree"></div>
+    </aside>
+    <div class="main">
+    <div class="crumb" id="crumb"></div>
   <div class="stage">
     <main class="card" id="card">
       <div class="cardbg"></div>
@@ -298,6 +349,12 @@
       <ul class="menu" id="menu" hidden></ul>
       <span id="probe" aria-hidden="true" style="position:absolute;visibility:hidden;width:var(--u);height:0;left:0;top:0"></span>
     </main>
+  </div>
+    <footer class="status">
+      <span class="br" id="stbr"></span>
+      <span class="r"><span id="stpos"></span><span>UTF-8</span><span>Lusaka, ZM</span></span>
+    </footer>
+    </div>
   </div>
 
   <noscript>Chimwemwe Siyingwa is a software developer and third-year IS&amp;T student at the University of Lusaka. Find the work on <a href="https://github.com/mwemmz">GitHub</a> or <a href="https://www.linkedin.com/in/chimwemwe-siyingwa-97b627352">LinkedIn</a>. This portfolio needs JavaScript to run its slides.</noscript>
@@ -549,6 +606,37 @@
     $('#next').innerHTML = ico('next'); menubtn.innerHTML = ico('menu');
     menu.innerHTML = SL.map((s, i) => `<li><button type="button" data-go="${i}">${ico(s.icon)}<span>${esc(s.label)}</span><small>${String(i + 1).padStart(2, '0')}</small></button></li>`).join('');
 
+    /* ── VS Code shell ─────────────────────────── */
+    const EXT = { home: 'README.md', experience: 'experience.ts', websites: 'websites.html', 'public-sector': 'public-sector.php', operations: 'operations.py', marketplaces: 'marketplaces.tsx', 'ai-data': 'ai-data.ipynb', skills: 'skills.json', education: 'education.md', connect: 'connect.sh' };
+    const PROJ = ['websites', 'public-sector', 'operations', 'marketplaces', 'ai-data'];
+    const dotc = (S) => `<i class="dot" style="background:${(PAL[CLAY[S.pal] || S.pal]).m}"></i>`;
+    const fold = (t, open = true) => `<div class="fold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${open ? 'M6 9l6 6 6-6' : 'M9 6l6 6-6 6'}"/></svg>${t}</div>`;
+    const fileBtn = (S, i, inner) => `<button class="file${inner ? ' in' : ''}" type="button" data-go="${i}">${dotc(S)}<span>${EXT[S.id]}</span></button>`;
+    const stree = $('#tree'), tabsEl = $('#tabs'), crumb = $('#crumb'), stbr = $('#stbr'), stpos = $('#stpos');
+    stree.innerHTML = fold('portfolio') +
+      SL.map((S, i) => (i < 2 ? fileBtn(S, i, false) : '')).join('') +
+      '<div class="fold" style="padding-left:28px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>projects</div>' +
+      SL.map((S, i) => (PROJ.includes(S.id) ? fileBtn(S, i, true) : '')).join('') +
+      SL.map((S, i) => (i >= 2 && !PROJ.includes(S.id) ? fileBtn(S, i, false) : '')).join('');
+    tabsEl.innerHTML = SL.map((S, i) => `<button class="tab" type="button" data-go="${i}">${dotc(S)}${EXT[S.id]}</button>`).join('');
+    document.addEventListener('click', (e) => {
+      const b = e.target.closest('.side [data-go], .tabs [data-go]');
+      if (b) { const n = +b.dataset.go; go(n, n >= idx ? 1 : -1); }
+    });
+    function shellSync(n) {
+      const S = SL[n], acc = S.pal === 'navy' ? '#ff6a47' : PAL[S.pal].acc;
+      document.documentElement.style.setProperty('--sacc', acc);
+      document.querySelectorAll('.side .file, .tabs .tab').forEach((x) => {
+        const on = +x.dataset.go === n;
+        x.classList.toggle('active', on);
+        on ? x.setAttribute('aria-current', 'true') : x.removeAttribute('aria-current');
+        if (on && x.classList.contains('tab')) x.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      });
+      crumb.innerHTML = `portfolio › ${PROJ.includes(S.id) ? 'projects › ' : ''}<b>${EXT[S.id]}</b>`;
+      stbr.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON.branch}</svg>master`;
+      stpos.textContent = `Slide ${n + 1} of ${SL.length}`;
+    }
+
     const uPx = () => probe.getBoundingClientRect().width || 10;
     const anim = (el, kf, o) => { try { return el.animate(kf, o).finished.catch(() => {}); } catch (e) { return Promise.resolve(); } };
 
@@ -668,6 +756,7 @@
       menu.querySelectorAll('button').forEach((x, i) => (i === n ? x.setAttribute('aria-current', 'true') : x.removeAttribute('aria-current')));
       live.textContent = `${S.label}, section ${n + 1} of ${SL.length}`;
       history.replaceState(null, '', '#' + S.id);
+      shellSync(n);
     }
     async function go(n, d = 1, first = false) {
       n = (n + SL.length) % SL.length;
