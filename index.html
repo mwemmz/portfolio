@@ -2,1485 +2,720 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Chimwemwe Siyingwa — Developer Portfolio</title>
   <meta name="description" content="Software developer building solutions that solve real problems. Third-year IS&T student, junior developer, and open source contributor.">
+  <meta name="theme-color" content="#ececf1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #08090C;
-      --surface: #1C222B;
-      --text: #C9D1D9;
-      --muted: #6E7681;
-      --green: #3FB950;
-      --red: #F85149;
-      --blue: #58A6FF;
-      --amber: #E3B341;
-      --border: #2A313C;
-      --tab-dim: #0D1117;
-      --tab-active: #1C222B;
-      --sidebar-width: 220px;
-      --sidebar-width-mobile: 0px;
-      --tab-height: 36px;
-      --status-height: 24px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+      --ink: #16151f;
+      --mute: #6f6f7c;
+      --soft: #8d8d99;
+      --band: #f4f4f7;
+      --chip: #efeff3;
     }
 
-    html { background: var(--bg); scroll-behavior: smooth; }
+    html, body { height: 100%; }
     body {
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      background: var(--bg);
+      font-family: 'Lexend', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: var(--ink);
+      background: radial-gradient(120% 100% at 50% 0%, #f6f6f9 0%, #e8e8ee 100%);
+      overflow: hidden;
       -webkit-font-smoothing: antialiased;
-      line-height: 1.65;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
     }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    a { color: inherit; }
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-    /* ── Tab Strip (Top Bar) ─────────────────────── */
-    .tab-strip {
-      display: flex;
-      align-items: stretch;
-      height: var(--tab-height);
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-      z-index: 100;
-      -webkit-app-region: drag;
-    }
-
-    .traffic-lights {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0 14px;
-      flex-shrink: 0;
-      -webkit-app-region: no-drag;
-    }
-    .traffic-lights span {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-    .traffic-lights span:nth-child(1) { background: #FF5F57; }
-    .traffic-lights span:nth-child(2) { background: #FEBC2E; }
-    .traffic-lights span:nth-child(3) { background: #28C840; }
-
-    .tabs {
-      display: flex;
-      align-items: stretch;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -webkit-app-region: no-drag;
-    }
-    .tabs::-webkit-scrollbar { display: none; }
-
-    .tab {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--muted);
-      cursor: pointer;
-      border-right: 1px solid var(--border);
-      white-space: nowrap;
-      transition: color 0.15s, background 0.15s;
-      user-select: none;
-      text-decoration: none;
+    /* ── Stage & card (everything scales with --u = 1% of card width) ── */
+    .stage { height: 100dvh; display: grid; place-items: center; }
+    .card {
+      --w: min(1280px, 94vw, calc((100dvh - 40px) * 1.5));
+      --u: calc(var(--w) / 100);
+      --acc: #6d4aff;
       position: relative;
+      width: var(--w);
+      height: calc(var(--w) / 1.5);
     }
-    .tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-    .tab.active {
-      color: var(--text);
-      background: var(--tab-active);
+    .cardbg {
+      position: absolute; inset: 0;
+      border-radius: calc(var(--u) * 5.6);
+      background: linear-gradient(#fff 58%, #f3f3f6);
+      box-shadow: 0 calc(var(--u) * 3.2) calc(var(--u) * 7) rgba(40, 40, 80, .12), 0 calc(var(--u) * .4) calc(var(--u) * 1.2) rgba(40, 40, 80, .06);
+      animation: pop .9s cubic-bezier(.2, .9, .25, 1) both;
     }
-    .tab.active::after {
-      content: '';
+    @keyframes pop { from { opacity: 0; transform: translateY(calc(var(--u) * 2)) scale(.985); } }
+
+    .blobwrap {
+      position: absolute; left: 0; top: 0; width: 52%; height: 82%;
+      border-radius: calc(var(--u) * 5.6) 0 0 0;
+      overflow: hidden; z-index: 1;
+    }
+    .blobwrap svg { display: block; width: 100%; height: 100%; }
+
+    .logo { position: absolute; left: calc(var(--u) * 10.6); top: calc(var(--u) * 6.8); width: calc(var(--u) * 2.1); z-index: 5; color: #fff; opacity: .9; }
+    .logo svg { display: block; width: 100%; }
+    .avatar {
+      position: absolute; right: calc(var(--u) * 7.4); top: calc(var(--u) * 6.3);
+      width: calc(var(--u) * 4); height: calc(var(--u) * 4); z-index: 5;
+      border-radius: 50%; transition: transform .3s;
+    }
+    .avatar:hover { transform: scale(1.1) rotate(-6deg); }
+    .avatar svg { display: block; width: 100%; height: 100%; }
+
+    /* ── Headline on the blob ── */
+    .headline {
+      position: absolute; left: 11%; top: 21%; z-index: 2;
+      font-family: 'Poppins', sans-serif; font-weight: 800;
+      font-size: calc(var(--u) * 5); line-height: 1.07; letter-spacing: -.012em;
+      color: #fff; text-shadow: 0 calc(var(--u) * .3) calc(var(--u) * 1.2) rgba(20, 10, 60, .14);
+    }
+    .headline .ln { display: block; overflow: hidden; width: calc(var(--u) * 36); padding-bottom: .16em; margin-bottom: -.16em; }
+    .t, .t2 { display: inline-block; will-change: transform; }
+
+    /* ── Floating objects ── */
+    .fx { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+    .o {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--blue);
+      left: calc(var(--dx) * 1%); top: calc(var(--dy) * 1%);
+      width: calc(var(--u) * var(--z)); aspect-ratio: 1;
+      translate: -50% -50%;
     }
-    .tab .icon {
-      font-size: 13px;
-      opacity: 0.6;
-    }
-    .tab .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      opacity: 0;
-      transition: opacity 0.15s;
-    }
-    .tab:hover .dot { opacity: 0.5; }
-
-    @media (max-width: 767px) {
-      .tab-strip { display: none; }
+    .o svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .o .fl { width: 100%; height: 100%; animation: fl var(--fd, 6s) ease-in-out infinite alternate; }
+    .o.static .fl { animation-duration: 8s; }
+    @keyframes fl {
+      from { transform: translateY(calc(var(--u) * -.7)) rotate(-3deg); }
+      to   { transform: translateY(calc(var(--u) * .7)) rotate(3deg); }
     }
 
-    /* ── Layout ──────────────────────────────────── */
-    .layout {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
+    /* ── Right panel ── */
+    .panel {
+      position: absolute; left: 53.5%; right: 0; top: 19%; bottom: 0; z-index: 4;
+      display: flex; flex-direction: column; pointer-events: none;
     }
+    .panel > * { pointer-events: auto; }
+    .title {
+      padding-left: calc(var(--u) * 4);
+      font-weight: 300; font-size: calc(var(--u) * 3.15); line-height: 1.38; letter-spacing: -.005em;
+    }
+    .title .ln { display: block; overflow: hidden; padding-bottom: .12em; margin-bottom: -.12em; }
+    .tag {
+      padding-left: calc(var(--u) * 4); margin-top: calc(var(--u) * 1.2);
+      min-height: calc(var(--u) * 2.4); font-size: calc(var(--u) * 1.35); color: var(--mute);
+    }
+    .thead {
+      display: grid; grid-template-columns: 1fr calc(var(--u) * 9) calc(var(--u) * 6.6) calc(var(--u) * 5);
+      padding: 0 calc(var(--u) * 3) 0 calc(var(--u) * 4); margin-top: calc(var(--u) * 3);
+      font-size: calc(var(--u) * 1.05); letter-spacing: .14em; text-transform: uppercase; color: var(--mute);
+    }
+    .list {
+      flex: 1; min-height: 0; list-style: none; margin-top: calc(var(--u) * 1.6);
+      overflow-y: auto; scrollbar-width: none; overscroll-behavior: contain;
+      padding-bottom: calc(var(--u) * 16);
+      -webkit-mask-image: linear-gradient(#000 calc(100% - var(--u) * 17), transparent calc(100% - var(--u) * 5));
+      mask-image: linear-gradient(#000 calc(100% - var(--u) * 17), transparent calc(100% - var(--u) * 5));
+    }
+    .list::-webkit-scrollbar { display: none; }
+    .item:nth-child(odd) { background: linear-gradient(90deg, rgba(244, 244, 247, 0), var(--band) calc(var(--u) * 4.5)); }
+    .row {
+      display: grid; grid-template-columns: 1fr calc(var(--u) * 9) calc(var(--u) * 6.6) calc(var(--u) * 5);
+      align-items: center; width: 100%; min-height: calc(var(--u) * 7.6);
+      padding: calc(var(--u) * .9) calc(var(--u) * 3) calc(var(--u) * .9) calc(var(--u) * 4);
+      text-align: left; text-decoration: none; color: inherit;
+      font-size: calc(var(--u) * 1.7); line-height: 1.28;
+    }
+    .row .nm { overflow-wrap: anywhere; padding-right: calc(var(--u) * 1); }
+    .row .mt { font-size: calc(var(--u) * 1.15); color: var(--mute); line-height: 1.3; overflow-wrap: anywhere; }
+    .row .th { display: grid; place-items: center; }
+    .row .th svg { width: calc(var(--u) * 4.6); height: calc(var(--u) * 4.6); display: block; transition: transform .45s cubic-bezier(.2, .9, .25, 1); }
+    .row:hover .th svg { transform: translateY(calc(var(--u) * -.4)) rotate(-8deg) scale(1.08); }
+    .row .pl { display: grid; place-items: center; justify-self: end; width: calc(var(--u) * 2.2); }
+    .row .pl .ic { width: calc(var(--u) * 1.8); height: calc(var(--u) * 1.8); transition: transform .35s, color .2s; }
+    .row:hover .pl .ic { color: var(--acc); }
+    .item.open .pl .ic { transform: rotate(45deg); color: var(--acc); }
+    .detail {
+      max-height: 0; overflow: hidden; transition: max-height .5s cubic-bezier(.2, .8, .2, 1);
+      padding: 0 calc(var(--u) * 3) 0 calc(var(--u) * 4);
+      font-size: calc(var(--u) * 1.35); line-height: 1.6; color: var(--mute);
+    }
+    .detail > div { padding-bottom: calc(var(--u) * 1.6); }
+    .lk {
+      display: inline-flex; align-items: center; gap: .4em; margin: .9em .7em 0 0; padding: .5em 1.1em;
+      border: 1px solid #e0e0e8; border-radius: 99px; background: #fff; color: var(--ink);
+      text-decoration: none; font-size: calc(var(--u) * 1.25); transition: border-color .2s, color .2s;
+    }
+    .lk:hover { border-color: var(--acc); color: var(--acc); }
+    .lk .ic { width: 1.1em; height: 1.1em; }
+    .chips { display: flex; flex-wrap: wrap; gap: .5em; margin-top: .3em; }
+    .chips span { padding: .3em .9em; border-radius: 99px; background: #fff; border: 1px solid #e6e6ee; color: var(--ink); font-size: .95em; }
 
-    /* ── Sidebar ─────────────────────────────────── */
-    .sidebar {
-      width: var(--sidebar-width);
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      box-shadow: 2px 0 8px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      overflow-y: auto;
-      scrollbar-width: none;
+    /* ── Bottom UI ── */
+    .pill {
+      position: absolute; left: 59%; translate: -50% 0; bottom: calc(var(--u) * 7.6); z-index: 6;
+      display: flex; align-items: center; gap: calc(var(--u) * .4);
+      padding: calc(var(--u) * .7) calc(var(--u) * .7) calc(var(--u) * .7) calc(var(--u) * 1.6);
+      background: #fff; border-radius: 99px;
+      box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 3.6) rgba(30, 30, 60, .14), 0 0 0 1px rgba(30, 30, 60, .03);
     }
-    .sidebar::-webkit-scrollbar { display: none; }
+    .pill > button, .pill > a {
+      display: grid; place-items: center; width: calc(var(--u) * 4.6); height: calc(var(--u) * 4.6);
+      border-radius: 50%; color: #3b3a48; transition: background .2s, color .2s;
+    }
+    .pill > button:hover, .pill > a:hover { background: var(--chip); }
+    .pill #mail { color: var(--acc); }
+    .pill .sep { width: 1px; height: calc(var(--u) * 3.4); background: #e4e4eb; margin: 0 calc(var(--u) * .5) 0 calc(var(--u) * .3); }
+    .pill .go {
+      width: calc(var(--u) * 6.2); height: calc(var(--u) * 6.2); background: #2a2a33; color: #fff;
+      box-shadow: 0 calc(var(--u) * .6) calc(var(--u) * 1.4) rgba(20, 20, 40, .3); transition: transform .3s, background .2s;
+    }
+    .pill .go:hover { background: #000; transform: translateX(calc(var(--u) * .25)); }
+    .ic { width: calc(var(--u) * 2.1); height: calc(var(--u) * 2.1); display: block; }
 
-    .sidebar-header {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      padding: 12px 16px 8px;
-      border-bottom: 1px solid var(--border);
+    .steps { position: absolute; left: calc(var(--u) * 5); bottom: calc(var(--u) * 4.9); z-index: 6; display: flex; align-items: center; gap: calc(var(--u) * .6); }
+    .steps .cur, .menubtn {
+      display: grid; place-items: center; width: calc(var(--u) * 6.2); height: calc(var(--u) * 6.2);
+      background: var(--chip); border-radius: calc(var(--u) * 1.7); color: #2f2e3b; transition: background .2s;
     }
+    .steps .cur:hover, .menubtn:hover { background: #e6e6ec; }
+    .steps .sm { display: grid; place-items: center; width: calc(var(--u) * 3); height: calc(var(--u) * 3); color: #5d5c69; opacity: .8; transition: opacity .2s; }
+    .steps .sm:hover { opacity: 1; }
+    .steps .sm .ic { width: calc(var(--u) * 1.8); height: calc(var(--u) * 1.8); }
+    .steps .dash { width: calc(var(--u) * 1.9); height: 1px; background: #5d5c69; opacity: .55; }
+    .menubtn { position: absolute; right: calc(var(--u) * 5); bottom: calc(var(--u) * 4.9); z-index: 6; }
 
-    .file-tree {
-      padding: 8px 0;
-      flex: 1;
+    .menu {
+      position: absolute; right: calc(var(--u) * 5); bottom: calc(var(--u) * 12); z-index: 8; min-width: calc(var(--u) * 24);
+      padding: calc(var(--u) * .8); background: #fff; border-radius: calc(var(--u) * 2.4);
+      box-shadow: 0 calc(var(--u) * 1.6) calc(var(--u) * 4) rgba(30, 30, 60, .18); list-style: none;
     }
+    .menu[hidden] { display: none; }
+    .menu button {
+      display: flex; align-items: center; gap: calc(var(--u) * 1.2); width: 100%; padding: calc(var(--u) * .9) calc(var(--u) * 1.2);
+      border-radius: calc(var(--u) * 1.4); font-size: calc(var(--u) * 1.5); text-align: left; transition: background .2s;
+    }
+    .menu button:hover, .menu button[aria-current="true"] { background: var(--chip); }
+    .menu .ic { width: calc(var(--u) * 2); height: calc(var(--u) * 2); color: var(--mute); }
+    .menu small { margin-left: auto; color: var(--soft); font-size: .8em; }
 
-    .tree-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 16px 4px 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--muted);
-      cursor: pointer;
-      text-decoration: none;
-      transition: color 0.15s, background 0.15s;
-      user-select: none;
-    }
-    .tree-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-    .tree-item.active { color: var(--text); background: rgba(88,166,255,0.06); }
-    .tree-item .icon { font-size: 13px; opacity: 0.6; width: 16px; text-align: center; flex-shrink: 0; }
-    .tree-item.folder { color: var(--text); }
-    .tree-item.folder .icon { color: var(--blue); opacity: 0.7; }
-    .tree-item.indent { padding-left: 32px; }
-    .tree-item.indent2 { padding-left: 48px; }
+    :focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; border-radius: 10px; }
+    noscript { position: fixed; inset: auto 16px 16px 16px; padding: 14px 16px; background: #fff; border-radius: 14px; font-size: 14px; z-index: 20; }
 
-    @media (max-width: 767px) {
-      .sidebar { display: none; }
-    }
-
-    /* ── Mobile Bottom Nav ───────────────────────── */
-    .mobile-nav {
-      display: none;
-      position: fixed;
-      bottom: var(--status-height);
-      left: 0;
-      right: 0;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
-      z-index: 90;
-      padding: 6px 8px;
-      gap: 4px;
-      justify-content: space-around;
-    }
-    .mobile-nav a {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      text-decoration: none;
-      padding: 6px 8px;
-      border-radius: 4px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      transition: color 0.15s;
-    }
-    .mobile-nav a:hover, .mobile-nav a.active { color: var(--text); }
-    .mobile-nav a .icon { font-size: 16px; }
-    @media (max-width: 767px) {
-      .mobile-nav { display: flex; }
-    }
-
-    /* ── Main Editor ─────────────────────────────── */
-    .editor {
-      flex: 1;
-      overflow-y: auto;
-      background: var(--bg);
-      position: relative;
-    }
-
-    .section {
-      padding: 48px 56px;
-      max-width: 860px;
-      border-bottom: 1px solid var(--border);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .section:last-child { border-bottom: none; }
-
-    @media (max-width: 767px) {
-      .section { padding: 32px 20px; min-height: auto; }
-    }
-
-    /* ── Hero ─────────────────────────────────────── */
-    .hero-name {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(48px, 10vw, 96px);
-      font-weight: 500;
-      color: var(--text);
-      letter-spacing: -0.04em;
-      line-height: 1;
-      margin-bottom: 24px;
-    }
-    .code-block {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: clamp(13px, 1.6vw, 15px);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-      margin-bottom: 32px;
-      max-width: 540px;
-      box-shadow: var(--shadow);
-    }
-    .code-block-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
-      font-size: 11px;
-      color: var(--muted);
-    }
-    .code-block-header .dots {
-      display: flex;
-      gap: 5px;
-    }
-    .code-block-header .dots span {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-    }
-    .code-block-header .dots span:nth-child(1) { background: #FF5F57; }
-    .code-block-header .dots span:nth-child(2) { background: #FEBC2E; }
-    .code-block-header .dots span:nth-child(3) { background: #28C840; }
-    .code-block-body {
-      padding: 16px 0;
-      line-height: 1.8;
-    }
-    .code-line {
-      display: flex;
-      padding: 0 16px;
-    }
-    .code-line:hover { background: rgba(255,255,255,0.02); }
-    .line-num {
-      color: var(--muted);
-      min-width: 28px;
-      text-align: right;
-      margin-right: 16px;
-      user-select: none;
-      opacity: 0.5;
-    }
-    .code-content {
-      flex: 1;
-      white-space: pre;
-    }
-    .code-kw { color: #FF7B72; }
-    .code-fn { color: #D2A8FF; }
-    .code-str { color: #A5D6FF; }
-    .code-cm { color: #8B949E; font-style: italic; }
-    .code-var { color: var(--text); }
-    .code-op { color: var(--text); }
-    .code-type { color: #FFA657; }
-    .code-cursor {
-      display: inline-block;
-      width: 8px;
-      height: 1.15em;
-      background: var(--text);
-      vertical-align: text-bottom;
-      animation: blink 1s step-end infinite;
-    }
-    @keyframes blink { 50% { opacity: 0; } }
     @media (prefers-reduced-motion: reduce) {
-      .code-cursor { animation: none; opacity: 1; }
-    }
-    .hero-roles {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .role-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 5px 12px;
-      border-radius: 4px;
+      .cardbg { animation: none; }
+      .o .fl { animation: none; }
+      .detail { transition: none; }
     }
 
-    /* ── About (README.md) ───────────────────────── */
-    .readme-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
+    /* ── Phones & narrow windows ── */
+    @media (max-width: 860px) {
+      .card { --w: calc(100vw - 20px); --u: calc(var(--w) / 40); height: calc(100dvh - 20px); min-height: 560px; }
+      .cardbg { border-radius: calc(var(--u) * 3); }
+      .blobwrap { width: 100%; height: 44%; border-radius: calc(var(--u) * 3) calc(var(--u) * 3) 0 0; }
+      .logo { left: calc(var(--u) * 5); top: calc(var(--u) * 3.6); width: calc(var(--u) * 2.2); }
+      .avatar { right: calc(var(--u) * 4.4); top: calc(var(--u) * 3); width: calc(var(--u) * 4); height: calc(var(--u) * 4); }
+      .headline { left: calc(var(--u) * 5); top: 11.5%; font-size: calc(var(--u) * 4.1); }
+      .headline .ln { width: calc(var(--u) * 30); }
+      .o { left: calc(var(--mx) * 1%); top: calc(var(--my) * 1%); width: calc(var(--u) * var(--zm)); }
+      .panel { left: 0; right: 0; top: 45.5%; }
+      .title { padding-left: calc(var(--u) * 5); font-size: calc(var(--u) * 2.5); line-height: 1.3; }
+      .title .ln { display: inline-block; margin-right: .28em; }
+      .tag { display: none; }
+      .thead { padding: 0 calc(var(--u) * 3) 0 calc(var(--u) * 5); margin-top: calc(var(--u) * 1.4); font-size: calc(var(--u) * .95); grid-template-columns: 1fr calc(var(--u) * 10) calc(var(--u) * 7) calc(var(--u) * 4); }
+      .list { margin-top: calc(var(--u) * 1); padding-bottom: calc(var(--u) * 15); }
+      .row { grid-template-columns: 1fr calc(var(--u) * 10) calc(var(--u) * 7) calc(var(--u) * 4); min-height: calc(var(--u) * 6.4); padding-left: calc(var(--u) * 5); font-size: calc(var(--u) * 1.6); }
+      .row .mt { font-size: calc(var(--u) * 1.1); }
+      .row .th svg { width: calc(var(--u) * 4); height: calc(var(--u) * 4); }
+      .detail { padding-left: calc(var(--u) * 5); font-size: calc(var(--u) * 1.35); }
+      .item:nth-child(odd) { background: linear-gradient(90deg, rgba(244, 244, 247, 0), var(--band) calc(var(--u) * 3)); }
+      .pill { left: 50%; bottom: calc(var(--u) * 3.2); }
+      .pill > button, .pill > a { width: calc(var(--u) * 4.4); height: calc(var(--u) * 4.4); }
+      .pill .go { width: calc(var(--u) * 5.6); height: calc(var(--u) * 5.6); }
+      .ic { width: calc(var(--u) * 2); height: calc(var(--u) * 2); }
+      .steps { left: calc(var(--u) * 3.6); bottom: calc(var(--u) * 3.8); }
+      .steps .sm, .steps .dash { display: none; }
+      .steps .cur, .menubtn { width: calc(var(--u) * 4.8); height: calc(var(--u) * 4.8); border-radius: calc(var(--u) * 1.4); }
+      .menubtn { right: calc(var(--u) * 3.6); bottom: calc(var(--u) * 3.8); }
+      .menu { right: calc(var(--u) * 3.6); bottom: calc(var(--u) * 10); min-width: calc(var(--u) * 20); }
+      .menu button { font-size: calc(var(--u) * 1.6); }
     }
-    .readme-header .file-icon { font-size: 18px; color: var(--blue); opacity: 0.7; }
-    .readme-header h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
-    .readme-tabs {
-      display: flex;
-      gap: 0;
-      margin-bottom: 20px;
-      border-bottom: 1px solid var(--border);
-    }
-    .readme-tab {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      padding: 8px 16px;
-      cursor: pointer;
-      border: none;
-      background: none;
-      color: var(--muted);
-      border-bottom: 2px solid transparent;
-      transition: color 0.15s;
-    }
-    .readme-tab.active {
-      color: var(--text);
-      border-bottom-color: var(--blue);
-    }
-    .readme-tab:hover { color: var(--text); }
-
-    .about-text {
-      font-size: 15px;
-      color: var(--text);
-      line-height: 1.75;
-      max-width: 640px;
-    }
-    .about-text strong { color: var(--text); font-weight: 600; }
-    .gpa-callout {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 8px;
-      margin-top: 24px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-    }
-    .gpa-callout .label { color: var(--muted); }
-    .gpa-callout .value {
-      color: var(--amber);
-      font-weight: 500;
-      font-size: 28px;
-    }
-
-    /* ── Experience (git log) ─────────────────────── */
-    .log-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 24px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .log-header .file-icon { font-size: 16px; color: var(--green); opacity: 0.7; }
-    .log-header h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
-    .log-entry {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(33,38,45,0.5);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      cursor: default;
-      position: relative;
-    }
-    .log-entry:last-child { border-bottom: none; }
-    .log-hash {
-      color: var(--muted);
-      flex-shrink: 0;
-      min-width: 60px;
-    }
-    .log-type {
-      flex-shrink: 0;
-      min-width: 48px;
-    }
-    .log-type.feat { color: var(--green); }
-    .log-type.fix { color: var(--amber); }
-    .log-scope { color: var(--muted); }
-    .log-msg { color: var(--text); }
-    .log-pr {
-      color: var(--blue);
-      font-size: 12px;
-    }
-    .log-entry .tooltip {
-      display: none;
-      position: absolute;
-      left: 0;
-      bottom: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 6px 10px;
-      border-radius: 4px;
-      font-size: 11px;
-      color: var(--muted);
-      white-space: nowrap;
-      z-index: 10;
-      margin-bottom: 4px;
-    }
-    .log-entry:hover .tooltip { display: block; }
-
-    /* ── Projects ─────────────────────────────────── */
-    .projects-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 24px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .projects-header .file-icon { font-size: 16px; color: var(--blue); opacity: 0.7; }
-    .projects-header h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
-
-    .repo-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-    }
-    .repo-card:hover {
-      border-color: var(--green);
-      box-shadow: var(--shadow), 0 0 0 1px rgba(63,185,80,0.15);
-      transform: translateY(-1px);
-    }
-    .repo-titlebar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
-    }
-    .repo-dots {
-      display: flex;
-      gap: 6px;
-    }
-    .repo-dots span {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-    .repo-dots span:nth-child(1) { background: #FF5F57; }
-    .repo-dots span:nth-child(2) { background: #FEBC2E; }
-    .repo-dots span:nth-child(3) { background: #28C840; }
-    .repo-titlebar .title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      margin-left: 4px;
-    }
-
-    .repo-body {
-      padding: 24px;
-    }
-    .repo-prompt {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-    .repo-prompt .cmd { color: var(--green); }
-    .repo-body h3 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
-    }
-    .repo-body p {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.65;
-      margin-bottom: 16px;
-      max-width: 600px;
-    }
-    .repo-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 20px;
-    }
-    .repo-tags span {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--green);
-      background: rgba(63,185,80,0.06);
-      border: 1px solid rgba(63,185,80,0.12);
-      padding: 3px 10px;
-      border-radius: 3px;
-    }
-    .repo-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-    .repo-live {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--green);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      border: 1px solid rgba(63,185,80,0.3);
-      border-radius: 4px;
-      background: rgba(63,185,80,0.06);
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .repo-live:hover {
-      border-color: var(--green);
-      background: rgba(63,185,80,0.12);
-    }
-    .repo-live:focus-visible {
-      outline: 2px solid var(--blue);
-      outline-offset: 4px;
-      border-radius: 2px;
-    }
-    .repo-live svg { width: 14px; height: 14px; }
-    .repo-clone {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--text);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      background: rgba(255,255,255,0.03);
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .repo-clone:hover {
-      border-color: var(--green);
-      background: rgba(63,185,80,0.06);
-    }
-    .repo-clone:focus-visible {
-      outline: 2px solid var(--blue);
-      outline-offset: 4px;
-      border-radius: 2px;
-    }
-    .repo-clone .star {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 1.5px solid var(--muted);
-      display: inline-block;
-    }
-
-    .repo-titlebar .count {
-      margin-left: auto;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-    }
-    .proj-list {
-      list-style: none;
-      border-top: 1px solid var(--border);
-    }
-    .proj-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(42,49,60,0.6);
-    }
-    .proj-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .proj-main {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 4px 14px;
-      min-width: 0;
-    }
-    .proj-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      color: var(--blue);
-      text-decoration: none;
-      overflow-wrap: anywhere;
-    }
-    .proj-name:hover { text-decoration: underline; }
-    .proj-desc { font-size: 13px; color: var(--muted); }
-    .proj-links { flex-shrink: 0; }
-    .proj-live {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--green);
-      text-decoration: none;
-      padding: 2px 8px;
-      border: 1px solid rgba(63,185,80,0.3);
-      border-radius: 4px;
-      background: rgba(63,185,80,0.06);
-      white-space: nowrap;
-    }
-    .proj-live:hover { border-color: var(--green); background: rgba(63,185,80,0.12); }
-    @media (max-width: 767px) {
-      .proj-row { flex-direction: column; gap: 6px; }
-    }
-
-    /* ── Skills ───────────────────────────────────── */
-    .skills-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 24px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .skills-header .file-icon { font-size: 16px; color: var(--amber); opacity: 0.7; }
-    .skills-header h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 32px;
-    }
-    .skill-group h3 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--green);
-      margin-bottom: 12px;
-    }
-    .skill-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .skill-chips span {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--muted);
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      border-radius: 4px;
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .skill-chips span:hover {
-      border-color: var(--blue);
-      color: var(--text);
-    }
-
-    /* ── Education ────────────────────────────────── */
-    .edu-top {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .edu-top h3 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
-    .edu-top .degree { font-size: 13px; color: var(--muted); }
-    .edu-top .years {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .gpa-trend {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-    .gpa-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-    .gpa-item .semester {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-    }
-    .gpa-item .score {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 22px;
-      font-weight: 500;
-      color: var(--muted);
-    }
-    .gpa-item .score.current { color: var(--amber); }
-    .gpa-arrow {
-      color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
-    }
-    .coursework-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-    .coursework-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .coursework-chips span {
-      font-size: 13px;
-      color: var(--muted);
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 4px 12px;
-      border-radius: 4px;
-    }
-
-    /* ── Connect ──────────────────────────────────── */
-    .connect-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 24px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .connect-header .file-icon { font-size: 16px; color: var(--green); opacity: 0.7; }
-    .connect-header h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
-    .connect-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .connect-links a {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      color: var(--blue);
-      text-decoration: none;
-      border: 1px solid var(--border);
-      padding: 8px 20px;
-      border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.15s;
-      background: rgba(255,255,255,0.02);
-    }
-    .connect-links a:hover {
-      border-color: var(--blue);
-      background: rgba(88,166,255,0.06);
-      color: var(--text);
-    }
-    .connect-links a:focus-visible {
-      outline: 2px solid var(--blue);
-      outline-offset: 4px;
-      border-radius: 2px;
-    }
-    .connect-links a svg { width: 14px; height: 14px; }
-
-    /* ── Status Bar ──────────────────────────────── */
-    .status-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: var(--status-height);
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
-      display: flex;
-      align-items: center;
-      padding: 0 12px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      z-index: 100;
-      gap: 16px;
-    }
-    .status-bar .left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .status-bar .right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-left: auto;
-    }
-    .status-bar .branch {
-      color: var(--blue);
-    }
-    .status-bar .problems {
-      color: var(--green);
-    }
-
-    @media (max-width: 767px) {
-      .status-bar { font-size: 10px; gap: 10px; padding: 0 8px; }
-      .status-bar .hide-mobile { display: none; }
-    }
-
-    @media (max-width: 767px) {
-      body { padding-bottom: 0; }
-    }
-
-    /* ── Focus Visible Global ─────────────────────── */
-    a:focus-visible, button:focus-visible {
-      outline: 2px solid var(--blue);
-      outline-offset: 4px;
-      border-radius: 2px;
-    }
-
-    /* ── Selection ────────────────────────────────── */
-    ::selection {
-      background: rgba(88,166,255,0.25);
-      color: var(--text);
-    }
-
-    /* ── Scrollbar ────────────────────────────────── */
-    .editor::-webkit-scrollbar { width: 8px; }
-    .editor::-webkit-scrollbar-track { background: var(--bg); }
-    .editor::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-    .editor::-webkit-scrollbar-thumb:hover { background: var(--muted); }
   </style>
 </head>
 <body>
+  <h1 class="sr">Chimwemwe Siyingwa — Developer Portfolio</h1>
+  <p class="sr" id="live" aria-live="polite"></p>
 
-  <!-- Tab Strip -->
-  <div class="tab-strip">
-    <div class="traffic-lights">
-      <span></span><span></span><span></span>
-    </div>
-    <div class="tabs">
-      <a href="#hero" class="tab active" data-section="hero">
-        <span class="icon">⚛</span> home.tsx <span class="dot"></span>
-      </a>
-      <a href="#about" class="tab" data-section="about">
-        <span class="icon">📖</span> about.md <span class="dot"></span>
-      </a>
-      <a href="#experience" class="tab" data-section="experience">
-        <span class="icon">📜</span> experience.log <span class="dot"></span>
-      </a>
-      <a href="#projects" class="tab" data-section="projects">
-        <span class="icon">📁</span> projects/ <span class="dot"></span>
-      </a>
-      <a href="#skills" class="tab" data-section="skills">
-        <span class="icon">⚙</span> skills.json <span class="dot"></span>
-      </a>
-      <a href="#education" class="tab" data-section="education">
-        <span class="icon">🎓</span> education.md <span class="dot"></span>
-      </a>
-      <a href="#connect" class="tab" data-section="connect">
-        <span class="icon">⚡</span> connect.sh <span class="dot"></span>
-      </a>
-    </div>
-  </div>
+  <div class="stage">
+    <main class="card" id="card">
+      <div class="cardbg"></div>
 
-  <div class="layout">
-
-    <!-- Sidebar -->
-    <nav class="sidebar">
-      <div class="sidebar-header">Explorer</div>
-      <div class="file-tree">
-        <div class="tree-item folder"><span class="icon">📂</span> portfolio/</div>
-        <a href="#hero" class="tree-item indent active" data-section="hero"><span class="icon">⚛</span> home.tsx</a>
-        <a href="#about" class="tree-item indent" data-section="about"><span class="icon">📖</span> README.md</a>
-        <div class="tree-item folder"><span class="icon">📂</span> experience/</div>
-        <a href="#experience" class="tree-item indent" data-section="experience"><span class="icon">📜</span> git.log</a>
-        <div class="tree-item folder"><span class="icon">📂</span> projects/</div>
-        <a href="#websites" class="tree-item indent" data-section="projects"><span class="icon">📁</span> websites-and-web-apps/</a>
-        <a href="#public-sector" class="tree-item indent" data-section="projects"><span class="icon">📁</span> public-sector-systems/</a>
-        <a href="#operations" class="tree-item indent" data-section="projects"><span class="icon">📁</span> operations-logistics-finance/</a>
-        <a href="#marketplaces" class="tree-item indent" data-section="projects"><span class="icon">📁</span> marketplaces-and-platforms/</a>
-        <a href="#ai-data" class="tree-item indent" data-section="projects"><span class="icon">📁</span> ai-and-data/</a>
-        <a href="#skills" class="tree-item" data-section="skills"><span class="icon">⚙</span> skills.json</a>
-        <a href="#education" class="tree-item" data-section="education"><span class="icon">🎓</span> education.md</a>
-        <a href="#connect" class="tree-item" data-section="connect"><span class="icon">⚡</span> connect.sh</a>
+      <div class="blobwrap" aria-hidden="true">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="blobGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop id="bs1" offset="0" stop-color="#a66bff"/>
+              <stop id="bs2" offset="1" stop-color="#6d5bff"/>
+            </linearGradient>
+          </defs>
+          <path id="blob" fill="url(#blobGrad)"/>
+        </svg>
       </div>
-    </nav>
 
-    <!-- Editor -->
-    <main class="editor" id="editor">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4.4 3 6.4 7.2 5.2 11.4C16 18.6 11.600 20.600 7.400 19.200 7 14.600 8.200 9 12 3z"/><path d="M10.400 16c.6-2.800 1.800-5 3.400-7"/></svg>
+      </div>
+      <button class="avatar" id="avatar" type="button" aria-label="Go to contact" title="Say hi">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#ffc83a"/><path d="M10 18.500c3 .2 5-1 7 0M23 18.500c2-1 4-.2 7 0" stroke="#2a2438" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M11 23.500c2 8.500 16 8.500 18 0z" fill="#2a2438"/></svg>
+      </button>
 
-      <!-- Hero -->
-      <section class="section" id="hero">
-        <h1 class="hero-name">Chimwemwe<br>Siyingwa</h1>
-        <div class="code-block">
-          <div class="code-block-header">
-            <div class="dots"><span></span><span></span><span></span></div>
-            home.tsx
-          </div>
-          <div class="code-block-body" id="code-block">
-            <div class="code-line">
-              <span class="line-num">1</span>
-              <span class="code-content"><span class="code-kw">const</span> <span class="code-fn">developer</span> <span class="code-op">=</span> <span class="code-op">{</span></span>
-            </div>
-            <div class="code-line">
-              <span class="line-num">2</span>
-              <span class="code-content">  <span class="code-var">name</span><span class="code-op">:</span> <span class="code-str">"Chimwemwe Siyingwa"</span><span class="code-op">,</span></span>
-            </div>
-            <div class="code-line">
-              <span class="line-num">3</span>
-              <span class="code-content">  <span class="code-var">role</span><span class="code-op">:</span> <span class="code-str">"Junior Developer"</span><span class="code-op">,</span></span>
-            </div>
-            <div class="code-line">
-              <span class="line-num">4</span>
-              <span class="code-content">  <span class="code-var">motto</span><span class="code-op">:</span> <span class="code-str" id="typewriter"></span><span class="code-cursor" id="code-cursor"></span></span>
-            </div>
-            <div class="code-line">
-              <span class="line-num">5</span>
-              <span class="code-content"><span class="code-op">}</span><span class="code-op">;</span></span>
-            </div>
-          </div>
-        </div>
-        <div class="hero-roles">
-          <span class="role-tag">Third-year IS&T Student</span>
-          <span class="role-tag">Junior Developer</span>
-          <span class="role-tag">Open Source Contributor</span>
-        </div>
+      <div class="headline" id="headline" role="heading" aria-level="2"></div>
+
+      <div class="fx" id="fx" aria-hidden="true"></div>
+
+      <section class="panel" aria-label="Details">
+        <div class="title" id="title" role="heading" aria-level="2"></div>
+        <p class="tag" id="tag"></p>
+        <div class="thead" id="thead" aria-hidden="true"></div>
+        <ul class="list" id="list"></ul>
       </section>
 
-      <!-- About (README.md) -->
-      <section class="section" id="about">
-        <div class="readme-header">
-          <span class="file-icon">📖</span>
-          <h2>README.md</h2>
-        </div>
-        <div class="readme-tabs">
-          <button class="readme-tab active">Preview</button>
-          <button class="readme-tab">Source</button>
-        </div>
-        <p class="about-text">
-          I am a third-year Bachelor of Science in Information Systems and Technology student at the <strong>University of Lusaka</strong> with a passion for software engineering, open source, and building technology that solves real-world problems. Alongside maintaining a <strong>4.00 semester GPA</strong>, I have gained practical industry experience as a <strong>Junior Developer at Ontech Solutions</strong>, where I contributed to the Local Authorities Management and Collection System (LAMCS), collaborating with senior developers on a production web application. Open source has become one of the most rewarding parts of my learning journey&nbsp;&mdash; contributing to <strong>activist</strong>, <strong>CVAT</strong>, and <strong>SymPy</strong>.
-        </p>
-        <div class="gpa-callout">
-          <span class="label">Current GPA</span>
-          <span class="value">4.00</span>
-        </div>
-      </section>
+      <div class="steps" id="steps"></div>
 
-      <!-- Experience (git log) -->
-      <section class="section" id="experience">
-        <div class="log-header">
-          <span class="file-icon">📜</span>
-          <h2>experience.log</h2>
-        </div>
+      <nav class="pill" aria-label="Controls">
+        <button id="prev" type="button" aria-label="Previous section" title="Previous"></button>
+        <a id="mail" href="mailto:chimwemwesiyingwa361@gmail.com" aria-label="Email me" title="Email me"></a>
+        <a id="gh" href="https://github.com/mwemmz" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" title="GitHub"></a>
+        <i class="sep" aria-hidden="true"></i>
+        <button id="next" class="go" type="button" aria-label="Next section" title="Next"></button>
+      </nav>
 
-        <div class="log-entry">
-          <span class="tooltip">merged Mar 2025 · reviewed by senior dev</span>
-          <span class="log-hash">a1b2c3d</span>
-          <span class="log-type feat">feat</span>
-          <span class="log-scope">(lamcs):</span>
-          <span class="log-msg">collaborate on production web app</span>
-        </div>
-
-        <div class="log-entry">
-          <span class="tooltip">merged 2025 · open source contribution</span>
-          <span class="log-hash">e4f5g6h</span>
-          <span class="log-type fix">fix</span>
-          <span class="log-scope">(activist):</span>
-          <span class="log-msg">mobile UI issues, logos, edit shortcuts, location filter</span>
-          <span class="log-pr">PR #2258</span>
-        </div>
-
-        <div class="log-entry">
-          <span class="tooltip">merged 2025 · open source contribution</span>
-          <span class="log-hash">i7j8k9l</span>
-          <span class="log-type fix">fix</span>
-          <span class="log-scope">(activist):</span>
-          <span class="log-msg">mobile UI issues</span>
-          <span class="log-pr">PR #2259</span>
-        </div>
-
-        <div class="log-entry">
-          <span class="tooltip">merged 2025 · documentation fix</span>
-          <span class="log-hash">m0n1o2p</span>
-          <span class="log-type fix">fix</span>
-          <span class="log-scope">(cvat):</span>
-          <span class="log-msg">installation documentation</span>
-          <span class="log-pr">PR #10917</span>
-        </div>
-
-        <div class="log-entry">
-          <span class="tooltip">merged 2025 · type annotations</span>
-          <span class="log-hash">q3r4s5t</span>
-          <span class="log-type feat">feat</span>
-          <span class="log-scope">(sympy):</span>
-          <span class="log-msg">add type annotations to DirectProduct</span>
-          <span class="log-pr">PR #30082</span>
-        </div>
-      </section>
-
-      <!-- Projects -->
-      <section class="section" id="projects">
-        <div class="projects-header">
-          <span class="file-icon">📁</span>
-          <h2>projects/</h2>
-        </div>
-
-        <div class="repo-card" id="websites">
-          <div class="repo-titlebar">
-            <div class="repo-dots"><span></span><span></span><span></span></div>
-            <span class="title">~/projects/websites-and-web-apps</span>
-            <span class="count">10 repos</span>
-          </div>
-          <div class="repo-body">
-            <div class="repo-prompt"><span class="cmd">$</span> ls websites-and-web-apps/</div>
-            <h3>Websites &amp; Web Apps</h3>
-            <p>Client work and concept builds: business sites, storefronts and small web apps, built to be fast, responsive and easy to deploy.</p>
-            <div class="repo-tags">
-              <span>--html</span>
-              <span>--css</span>
-              <span>--javascript</span>
-              <span>--typescript</span>
-            </div>
-            <ul class="proj-list">
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/royale-pavilion" target="_blank" rel="noopener noreferrer">royale-pavilion</a><span class="proj-desc">Events-planning landing page with a booking form</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/gs4" target="_blank" rel="noopener noreferrer">gs4</a><span class="proj-desc">Security services company website</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/tech-store" target="_blank" rel="noopener noreferrer">tech-store</a><span class="proj-desc">Tech store storefront</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/suitup-zambia" target="_blank" rel="noopener noreferrer">suitup-zambia</a><span class="proj-desc">Suit shop website</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/chirundu-united-fc" target="_blank" rel="noopener noreferrer">chirundu-united-fc</a><span class="proj-desc">Football club website</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/car-showroom-websites" target="_blank" rel="noopener noreferrer">car-showroom-websites</a><span class="proj-desc">Responsive showroom with vehicle listings and dynamic filtering</span></div>
-                <div class="proj-links"><a class="proj-live" href="https://carshowroom-7qs.pages.dev/" target="_blank" rel="noopener noreferrer">live ↗</a></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/mindwell" target="_blank" rel="noopener noreferrer">mindwell</a><span class="proj-desc">Mental health support website</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/zaria" target="_blank" rel="noopener noreferrer">zaria</a></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/coop-portal-replica" target="_blank" rel="noopener noreferrer">coop-portal-replica</a><span class="proj-desc">Portal front-end replica</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/bible-study-rota" target="_blank" rel="noopener noreferrer">bible-study-rota</a><span class="proj-desc">Rota scheduler for a study group</span></div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="repo-card" id="public-sector">
-          <div class="repo-titlebar">
-            <div class="repo-dots"><span></span><span></span><span></span></div>
-            <span class="title">~/projects/public-sector-systems</span>
-            <span class="count">3 repos</span>
-          </div>
-          <div class="repo-body">
-            <div class="repo-prompt"><span class="cmd">$</span> ls public-sector-systems/</div>
-            <h3>Public Sector Systems</h3>
-            <p>Management and collection systems for government and local-authority workflows, from transport regulation to revenue collection.</p>
-            <div class="repo-tags">
-              <span>--typescript</span>
-              <span>--python</span>
-              <span>--fastapi</span>
-            </div>
-            <ul class="proj-list">
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/lamcs-platform" target="_blank" rel="noopener noreferrer">lamcs-platform</a><span class="proj-desc">Local Authorities Management and Collection System</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/rtsa-itms" target="_blank" rel="noopener noreferrer">rtsa-itms</a><span class="proj-desc">Road Transport &amp; Safety Agency integrated transport management system</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/cdf-project" target="_blank" rel="noopener noreferrer">cdf-project</a></div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="repo-card" id="operations">
-          <div class="repo-titlebar">
-            <div class="repo-dots"><span></span><span></span><span></span></div>
-            <span class="title">~/projects/operations-logistics-finance</span>
-            <span class="count">7 repos</span>
-          </div>
-          <div class="repo-body">
-            <div class="repo-prompt"><span class="cmd">$</span> ls operations-logistics-finance/</div>
-            <h3>Operations, Logistics &amp; Finance</h3>
-            <p>Full-stack platforms that run real operations: farms, mines, airports, freight and money. Dashboards, workflows and data tracking, containerized for deployment.</p>
-            <div class="repo-tags">
-              <span>--typescript</span>
-              <span>--python</span>
-              <span>--php</span>
-              <span>--react</span>
-              <span>--flask</span>
-              <span>--postgresql</span>
-              <span>--docker</span>
-            </div>
-            <ul class="proj-list">
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/unified-mine-operations-platform" target="_blank" rel="noopener noreferrer">unified-mine-operations-platform</a><span class="proj-desc">Mining workflow orchestration, data tracking and dashboards</span></div>
-                <div class="proj-links"><a class="proj-live" href="https://unified-mine-operations-platform.onrender.com/" target="_blank" rel="noopener noreferrer">live ↗</a></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/airport360" target="_blank" rel="noopener noreferrer">airport360</a><span class="proj-desc">Flight operations, scheduling and resource allocation</span></div>
-                <div class="proj-links"><a class="proj-live" href="https://airport360-frontend.onrender.com/" target="_blank" rel="noopener noreferrer">live ↗</a></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/server-side-farm-system" target="_blank" rel="noopener noreferrer">server-side-farm-system</a><span class="proj-desc">Farm operations: crop tracking, inventory and resource planning</span></div>
-                <div class="proj-links"><a class="proj-live" href="https://farm-management-system-mb1e.onrender.com/" target="_blank" rel="noopener noreferrer">live ↗</a></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/farm-system-3-2" target="_blank" rel="noopener noreferrer">farm-system-3-2</a><span class="proj-desc">Farm management system</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/ifms2" target="_blank" rel="noopener noreferrer">ifms2</a><span class="proj-desc">Intelligent Financial Management System: budgets, spending analysis and ML insights</span></div>
-                <div class="proj-links"><a class="proj-live" href="https://ifms2-22.onrender.com/" target="_blank" rel="noopener noreferrer">live ↗</a></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/z-clear" target="_blank" rel="noopener noreferrer">z-clear</a><span class="proj-desc">Freight and clearing-agent workflow toolkit</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/cargo-flow-logistics" target="_blank" rel="noopener noreferrer">cargo-flow-logistics</a><span class="proj-desc">Cargo and logistics platform</span></div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="repo-card" id="marketplaces">
-          <div class="repo-titlebar">
-            <div class="repo-dots"><span></span><span></span><span></span></div>
-            <span class="title">~/projects/marketplaces-and-platforms</span>
-            <span class="count">3 repos</span>
-          </div>
-          <div class="repo-body">
-            <div class="repo-prompt"><span class="cmd">$</span> ls marketplaces-and-platforms/</div>
-            <h3>Marketplaces &amp; Platforms</h3>
-            <p>Multi-role products with accounts, bookings and verification, from services marketplaces to online exams.</p>
-            <div class="repo-tags">
-              <span>--react</span>
-              <span>--node</span>
-              <span>--postgresql</span>
-            </div>
-            <ul class="proj-list">
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/services-booking-backend" target="_blank" rel="noopener noreferrer">services-booking-backend</a><span class="proj-desc">Backend for a services booking marketplace</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/skillbridge-zambia" target="_blank" rel="noopener noreferrer">skillbridge-zambia</a><span class="proj-desc">Verified-skills marketplace for tradespeople</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/exam-integrity-platform" target="_blank" rel="noopener noreferrer">exam-integrity-platform</a><span class="proj-desc">Online practical exams with integrity monitoring</span></div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="repo-card" id="ai-data">
-          <div class="repo-titlebar">
-            <div class="repo-dots"><span></span><span></span><span></span></div>
-            <span class="title">~/projects/ai-and-data</span>
-            <span class="count">4 repos</span>
-          </div>
-          <div class="repo-body">
-            <div class="repo-prompt"><span class="cmd">$</span> ls ai-and-data/</div>
-            <h3>AI &amp; Data</h3>
-            <p>Agents and models that decide what to remember, check facts and advise. Retrieval, embeddings and prompt design under real constraints.</p>
-            <div class="repo-tags">
-              <span>--python</span>
-              <span>--openai</span>
-              <span>--chromadb</span>
-              <span>--streamlit</span>
-            </div>
-            <ul class="proj-list">
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/selective-memory-chat-agent" target="_blank" rel="noopener noreferrer">selective-memory-chat-agent</a><span class="proj-desc">Chatbot that stores only worthwhile facts as embeddings and retrieves them when relevant</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/multi-agent-fact-checker" target="_blank" rel="noopener noreferrer">multi-agent-fact-checker</a><span class="proj-desc">Multi-agent fact checking</span></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/grove-ai" target="_blank" rel="noopener noreferrer">grove-ai</a></div>
-              </li>
-              <li class="proj-row">
-                <div class="proj-main"><a class="proj-name" href="https://github.com/mwemmz/wildlife-sentinel" target="_blank" rel="noopener noreferrer">wildlife-sentinel</a></div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- Skills -->
-      <section class="section" id="skills">
-        <div class="skills-header">
-          <span class="file-icon">⚙</span>
-          <h2>skills.json</h2>
-        </div>
-        <div class="skills-grid">
-          <div class="skill-group">
-            <h3>Languages</h3>
-            <div class="skill-chips">
-              <span>Python</span>
-              <span>Java</span>
-              <span>TypeScript</span>
-              <span>JavaScript</span>
-              <span>HTML</span>
-              <span>CSS</span>
-              <span>SQL</span>
-            </div>
-          </div>
-          <div class="skill-group">
-            <h3>Frameworks</h3>
-            <div class="skill-chips">
-              <span>React</span>
-              <span>Flask</span>
-              <span>Vue.js</span>
-              <span>Nuxt</span>
-              <span>Tailwind CSS</span>
-              <span>JWT</span>
-            </div>
-          </div>
-          <div class="skill-group">
-            <h3>Databases & DevOps</h3>
-            <div class="skill-chips">
-              <span>PostgreSQL</span>
-              <span>SQLite</span>
-              <span>Firebase</span>
-              <span>Docker</span>
-              <span>Git</span>
-            </div>
-          </div>
-          <div class="skill-group">
-            <h3>Testing</h3>
-            <div class="skill-chips">
-              <span>pytest</span>
-              <span>mypy</span>
-              <span>ESLint</span>
-              <span>Vitest</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Education -->
-      <section class="section" id="education">
-        <div class="log-header">
-          <span class="file-icon">🎓</span>
-          <h2>education.md</h2>
-        </div>
-        <div class="edu-top">
-          <h3>University of Lusaka</h3>
-          <span class="degree">BSc Information Systems and Technology</span>
-          <span class="years">2023 &ndash; 2027</span>
-        </div>
-        <div class="gpa-trend">
-          <div class="gpa-item">
-            <span class="semester">Year 1</span>
-            <span class="score">3.70</span>
-          </div>
-          <span class="gpa-arrow">&rarr;</span>
-          <div class="gpa-item">
-            <span class="semester">Year 2</span>
-            <span class="score">3.90</span>
-          </div>
-          <span class="gpa-arrow">&rarr;</span>
-          <div class="gpa-item">
-            <span class="semester">Current</span>
-            <span class="score current">4.00</span>
-          </div>
-        </div>
-        <p class="coursework-label">Relevant Coursework</p>
-        <div class="coursework-chips">
-          <span>Systems Analysis</span>
-          <span>Database Design</span>
-          <span>Data Structures</span>
-          <span>Project Management</span>
-        </div>
-      </section>
-
-      <!-- Connect -->
-      <section class="section" id="connect">
-        <div class="connect-header">
-          <span class="file-icon">⚡</span>
-          <h2>connect.sh</h2>
-        </div>
-        <div class="connect-links">
-          <a href="https://github.com/mwemmz" target="_blank" rel="noopener noreferrer">
-            <svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
-            GitHub
-          </a>
-          <a href="https://www.linkedin.com/in/chimwemwe-siyingwa-97b627352" target="_blank" rel="noopener noreferrer">
-            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            LinkedIn
-          </a>
-          <a href="mailto:chimwemwesiyingwa361@gmail.com">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
-            Email
-          </a>
-        </div>
-      </section>
-
+      <button class="menubtn" id="menubtn" type="button" aria-label="All sections" aria-expanded="false" aria-controls="menu"></button>
+      <ul class="menu" id="menu" hidden></ul>
+      <span id="probe" aria-hidden="true" style="position:absolute;visibility:hidden;width:var(--u);height:0;left:0;top:0"></span>
     </main>
   </div>
 
-  <!-- Mobile Bottom Nav -->
-  <nav class="mobile-nav">
-    <a href="#hero" class="active" data-section="hero"><span class="icon">⚛</span> hero</a>
-    <a href="#about" data-section="about"><span class="icon">📖</span> about</a>
-    <a href="#experience" data-section="experience"><span class="icon">📜</span> exp</a>
-    <a href="#projects" data-section="projects"><span class="icon">📁</span> projects</a>
-    <a href="#skills" data-section="skills"><span class="icon">⚙</span> skills</a>
-    <a href="#connect" data-section="connect"><span class="icon">⚡</span> contact</a>
-  </nav>
-
-  <!-- Status Bar -->
-  <div class="status-bar">
-    <div class="left">
-      <span class="branch">⎇ main</span>
-      <span class="problems">✓ 0 problems</span>
-    </div>
-    <div class="right">
-      <span>UTF-8</span>
-      <span class="hide-mobile">Spaces: 2</span>
-      <span id="status-line">Ln 1</span>
-    </div>
-  </div>
+  <noscript>Chimwemwe Siyingwa is a software developer and third-year IS&amp;T student at the University of Lusaka. Find the work on <a href="https://github.com/mwemmz">GitHub</a> or <a href="https://www.linkedin.com/in/chimwemwe-siyingwa-97b627352">LinkedIn</a>. This portfolio needs JavaScript to run its slides.</noscript>
 
   <script>
-    // ── Typewriter (code-writing style) ────────────
-    (function() {
-      const text = 'Building software that solves real problems.';
-      const el = document.getElementById('typewriter');
-      const cursor = document.getElementById('code-cursor');
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (prefersReduced) {
-        el.textContent = '"' + text + '"';
-        if (cursor) cursor.style.display = 'none';
-        return;
+  (() => {
+    'use strict';
+
+    const $ = (s, r = document) => r.querySelector(s);
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+    /* ── Palettes ───────────────────────────────── */
+    const PAL = {
+      purple: { a: '#b06bff', b: '#6a5bff', l: '#cfbfff', m: '#7c5cff', d: '#4a2fd0', acc: '#6d4aff' },
+      coral:  { a: '#ffa57e', b: '#ff6b6b', l: '#ffcab6', m: '#ff7a59', d: '#d94a2e', acc: '#e8512f' },
+      yellow: { a: '#ffd04d', b: '#ff9f2e', l: '#ffeaa8', m: '#ffc233', d: '#e09200', acc: '#d98a00' },
+      teal:   { a: '#5cf0cb', b: '#2fcdb0', l: '#b4f8e8', m: '#3fd8b6', d: '#0f9f86', acc: '#0b9a82' },
+      blue:   { a: '#92cff8', b: '#5aa9ee', l: '#c7e6fc', m: '#5bb3f0', d: '#2b7fd1', acc: '#2478cc' },
+      pink:   { a: '#ffb8d4', b: '#ff7fb0', l: '#ffd9e8', m: '#ff7fb0', d: '#dd437f', acc: '#d83a78' },
+      green:  { a: '#c8f56e', b: '#58c96a', l: '#e4fbb0', m: '#9be03a', d: '#5fb300', acc: '#4a9a00' },
+      navy:   { a: '#4a4f6b', b: '#1e2133', l: '#7e86a6', m: '#454a63', d: '#14162a', acc: '#ff6a47' }
+    };
+    const ALT = { purple: 'pink', coral: 'yellow', yellow: 'pink', teal: 'yellow', blue: 'coral', pink: 'yellow', green: 'teal', navy: 'yellow' };
+    const CLAY = { navy: 'coral' };
+
+    /* ── Icons ──────────────────────────────────── */
+    const ICON = {
+      home: '<path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/>',
+      branch: '<circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="9" r="2"/><path d="M6 7v10M18 11c0 4-6 3-12 6"/>',
+      browser: '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 9h18M7 7h.01M10 7h.01"/>',
+      building: '<path d="M3 10l9-6 9 6M5 10v8M9.500 10v8M14.500 10v8M19 10v8M3 20h18"/>',
+      gear: '<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.600 5.600l2.100 2.100M16.300 16.300l2.100 2.100M18.400 5.600l-2.100 2.100M7.700 16.300l-2.100 2.100"/>',
+      bag: '<path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+      chip: '<rect x="6" y="6" width="12" height="12" rx="2.500"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/>',
+      layers: '<path d="M12 4l9 5-9 5-9-5z"/><path d="M3 14l9 5 9-5"/>',
+      cap: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.500V16c3 2.500 9 2.500 12 0v-4.500"/>',
+      mail: '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/>',
+      prev: '<path d="M15 5l-7 7 7 7"/>',
+      next: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+      menu: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M14 4v16"/>',
+      plus: '<path d="M12 5v14M5 12h14"/>',
+      out: '<path d="M7 17L17 7M9 7h8v8"/>'
+    };
+    const ico = (n, c = '') => `<svg class="ic ${c}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
+    const GH = '<svg class="ic" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.180 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.110-1.466-1.110-1.466-.908-.620.069-.608.069-.608 1.003.070 1.531 1.032 1.531 1.032.892 1.530 2.341 1.088 2.910.832.092-.647.350-1.088.636-1.338-2.220-.253-4.555-1.113-4.555-4.951 0-1.093.390-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.650 0 0 .840-.270 2.750 1.026A9.564 9.564 0 0112 6.844c.850.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.100 2.651.640.700 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.920.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.180.580.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>';
+
+    /* ── Clay SVG library ───────────────────────── */
+    function defs() {
+      let s = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>' +
+        '<filter id="bl" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>' +
+        '<linearGradient id="peb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e4e4ec"/></linearGradient>';
+      for (const [k, p] of Object.entries(PAL)) {
+        s += `<linearGradient id="m-${k}" x1="0" y1="0" x2=".4" y2="1"><stop offset="0" stop-color="${p.l}"/><stop offset=".45" stop-color="${p.m}"/><stop offset="1" stop-color="${p.d}"/></linearGradient>` +
+          `<radialGradient id="s-${k}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="${p.l}"/><stop offset=".5" stop-color="${p.m}"/><stop offset="1" stop-color="${p.d}"/></radialGradient>`;
       }
-      let i = 0;
-      // Add opening quote first
-      el.textContent = '"';
-      function type() {
-        if (i < text.length) {
-          el.textContent = '"' + text.substring(0, i + 1);
-          i++;
-          setTimeout(type, 45);
-        } else {
-          // Typing done — keep cursor blinking for a beat then hide
-          setTimeout(() => { if (cursor) cursor.style.display = 'none'; }, 1200);
-        }
+      return s + '</defs></svg>';
+    }
+    const shadow = (cx, cy, rx) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${rx * .11}" fill="#1b1840" opacity=".16" filter="url(#bl)"/>`;
+    const gloss = (d) => `<path d="${d}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="4" stroke-linecap="round"/>`;
+    const svg200 = (inner) => `<svg viewBox="0 0 200 200"><g class="fl-inner">${inner}</g></svg>`;
+
+    function gearPath(cx, cy, r1, r2, n) {
+      let d = '';
+      const step = (Math.PI * 2) / n;
+      for (let i = 0; i < n; i++) {
+        const a = i * step;
+        const pts = [[a - step * .26, r1], [a - step * .16, r2], [a + step * .16, r2], [a + step * .26, r1]];
+        pts.forEach(([ang, r], j) => { d += (i === 0 && j === 0 ? 'M' : 'L') + (cx + Math.cos(ang) * r).toFixed(1) + ' ' + (cy + Math.sin(ang) * r).toFixed(1) + ' '; });
       }
-      setTimeout(type, 600);
-    })();
+      return d + 'Z';
+    }
 
-    // ── Active Section Tracking ────────────────────
-    (function() {
-      const editor = document.getElementById('editor');
-      const sections = document.querySelectorAll('.section');
-      const tabs = document.querySelectorAll('.tab[data-section]');
-      const treeItems = document.querySelectorAll('.tree-item[data-section]');
-      const mobileLinks = document.querySelectorAll('.mobile-nav a[data-section]');
-      const statusLine = document.getElementById('status-line');
+    const HERO = {
+      laptop: (k) => { const P = PAL[k], m = `url(#m-${k})`; return svg200(`${shadow(100, 168, 80)}<rect x="38" y="34" width="124" height="92" rx="12" fill="${m}"/><rect x="48" y="44" width="104" height="72" rx="7" fill="#1c1a30"/><rect x="58" y="56" width="38" height="7" rx="3.5" fill="${P.l}"/><rect x="58" y="70" width="70" height="7" rx="3.5" fill="#fff" opacity=".9"/><rect x="58" y="84" width="52" height="7" rx="3.5" fill="${P.m}"/><rect x="58" y="98" width="30" height="7" rx="3.5" fill="#fff" opacity=".55"/><path d="M16 134h168a8 8 0 0 1-7 12H23a8 8 0 0 1-7-12z" fill="${m}"/>${gloss('M46 38q40-8 86-5')}`); },
+      gitgraph: (k) => { const m = `url(#m-${k})`, s = `url(#s-${k})`, P = PAL[k]; return svg200(`${shadow(100, 186, 60)}<rect x="92" y="26" width="16" height="148" rx="8" fill="${m}"/><path d="M100 112C100 84 150 90 150 62" fill="none" stroke="${P.m}" stroke-width="14" stroke-linecap="round"/><circle cx="100" cy="40" r="21" fill="${s}"/><circle cx="100" cy="112" r="21" fill="${s}"/><circle cx="100" cy="166" r="18" fill="${s}"/><circle cx="150" cy="60" r="18" fill="${s}"/><ellipse cx="92" cy="32" rx="8" ry="5" fill="#fff" opacity=".5" transform="rotate(-30 92 32)"/><ellipse cx="92" cy="104" rx="8" ry="5" fill="#fff" opacity=".5" transform="rotate(-30 92 104)"/><ellipse cx="144" cy="53" rx="6" ry="4" fill="#fff" opacity=".5" transform="rotate(-30 144 53)"/>`); },
+      browser: (k) => { const P = PAL[k], m = `url(#m-${k})`; return svg200(`${shadow(100, 168, 76)}<rect x="20" y="30" width="160" height="124" rx="16" fill="${m}"/><rect x="28" y="38" width="144" height="108" rx="10" fill="#fff" opacity=".94"/><circle cx="40" cy="50" r="4" fill="#ff6b6b"/><circle cx="52" cy="50" r="4" fill="#ffc233"/><circle cx="64" cy="50" r="4" fill="#3fd8b6"/><rect x="38" y="64" width="70" height="62" rx="9" fill="${P.m}"/><rect x="116" y="64" width="46" height="28" rx="9" fill="${P.l}"/><rect x="116" y="98" width="46" height="28" rx="9" fill="${P.d}" opacity=".85"/>${gloss('M26 44q40-10 100-6')}`); },
+      building: (k) => { const m = `url(#m-${k})`, P = PAL[k]; return svg200(`${shadow(100, 176, 80)}<path d="M100 26L168 70H32z" fill="${m}" stroke="${P.m}" stroke-width="10" stroke-linejoin="round"/><rect x="44" y="84" width="18" height="62" rx="9" fill="${m}"/><rect x="76" y="84" width="18" height="62" rx="9" fill="${m}"/><rect x="108" y="84" width="18" height="62" rx="9" fill="${m}"/><rect x="140" y="84" width="18" height="62" rx="9" fill="${m}"/><rect x="24" y="148" width="152" height="20" rx="10" fill="${m}"/>${gloss('M60 44l36-14')}`); },
+      gear: (k) => { const m = `url(#m-${k})`, P = PAL[k]; return svg200(`${shadow(100, 182, 70)}<path d="${gearPath(88, 88, 52, 68, 9)}" fill="${m}" stroke="${P.m}" stroke-width="8" stroke-linejoin="round"/><circle cx="88" cy="88" r="24" fill="#fff" opacity=".92"/><circle cx="88" cy="88" r="24" fill="none" stroke="${P.l}" stroke-width="4"/><path d="${gearPath(152, 148, 26, 36, 7)}" fill="${m}" stroke="${P.d}" stroke-width="6" stroke-linejoin="round"/><circle cx="152" cy="148" r="11" fill="#fff" opacity=".92"/>${gloss('M52 70q10-22 32-28')}`); },
+      bag: (k) => { const m = `url(#m-${k})`, P = PAL[k]; return svg200(`${shadow(100, 182, 64)}<path d="M72 74V62a28 28 0 0 1 56 0v12" fill="none" stroke="${P.m}" stroke-width="12" stroke-linecap="round"/><path d="M50 72h100l10 92a14 14 0 0 1-14 16H54a14 14 0 0 1-14-16z" fill="${m}"/><circle cx="100" cy="118" r="15" fill="#fff" opacity=".93"/><path d="M93 118h14M100 111v14" stroke="${P.d}" stroke-width="4" stroke-linecap="round"/>${gloss('M58 84l-2 38')}`); },
+      chip: (k) => { const m = `url(#m-${k})`, P = PAL[k]; let pins = ''; for (let i = 0; i < 3; i++) { const o = 70 + i * 30; pins += `<rect x="${o}" y="30" width="10" height="22" rx="5" fill="${P.d}"/><rect x="${o}" y="148" width="10" height="22" rx="5" fill="${P.d}"/><rect x="30" y="${o}" width="22" height="10" rx="5" fill="${P.d}"/><rect x="148" y="${o}" width="22" height="10" rx="5" fill="${P.d}"/>`; } return svg200(`${shadow(100, 182, 64)}${pins}<rect x="48" y="48" width="104" height="104" rx="24" fill="${m}"/><rect x="72" y="72" width="56" height="56" rx="14" fill="#1c1a30"/><path d="M100 80l6 14 14 6-14 6-6 14-6-14-14-6 14-6z" fill="#fff"/>${gloss('M58 66q4-12 18-16')}`); },
+      layers: (k) => { const m = `url(#m-${k})`, P = PAL[k]; const slab = (y, f) => `<path d="M100 ${y}l76 36-76 36-76-36z" fill="${f}" stroke="${f}" stroke-width="10" stroke-linejoin="round"/>`; return svg200(`${shadow(100, 186, 70)}${slab(100, P.d)}${slab(66, P.m)}${slab(32, m)}${gloss('M52 60l40-18')}`); },
+      cap: (k) => { const m = `url(#m-${k})`, P = PAL[k], s = `url(#s-${k})`; return svg200(`${shadow(100, 184, 70)}<path d="M54 100v32c30 28 62 28 92 0v-32l-46 20z" fill="${P.d}" opacity=".95"/><path d="M100 36l82 38-82 38-82-38z" fill="${m}" stroke="${P.m}" stroke-width="8" stroke-linejoin="round"/><path d="M172 80v50" stroke="${P.l}" stroke-width="6" stroke-linecap="round"/><circle cx="172" cy="138" r="10" fill="${s}"/>${gloss('M44 72l44-22')}`); },
+      envelope: (k) => { const m = `url(#m-${k})`; return svg200(`${shadow(100, 170, 74)}<rect x="24" y="46" width="152" height="108" rx="16" fill="${m}"/><path d="M36 62l64 50 64-50" fill="none" stroke="#fff" stroke-opacity=".92" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="170" cy="50" r="19" fill="url(#s-coral)"/><ellipse cx="164" cy="43" rx="6" ry="4" fill="#fff" opacity=".5" transform="rotate(-30 164 43)"/>${gloss('M34 62q-2 36 6 70')}`); }
+    };
+    const ORB = {
+      sphere: (k) => `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="url(#s-${k})"/><ellipse cx="38" cy="32" rx="13" ry="7" transform="rotate(-30 38 32)" fill="#fff" opacity=".45"/></svg>`,
+      cube: (k) => `<svg viewBox="0 0 100 100"><g transform="rotate(18 50 50)"><rect x="16" y="16" width="68" height="68" rx="20" fill="url(#m-${k})"/><path d="M27 32q9-12 25-13" stroke="#fff" stroke-opacity=".5" stroke-width="4" fill="none" stroke-linecap="round"/></g></svg>`,
+      pill: (k) => `<svg viewBox="0 0 100 100"><g transform="rotate(-28 50 50)"><rect x="8" y="33" width="84" height="34" rx="17" fill="url(#m-${k})"/><rect x="22" y="39" width="30" height="6" rx="3" fill="#fff" opacity=".45"/></g></svg>`,
+      ring: (k) => `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="31" fill="none" stroke="url(#m-${k})" stroke-width="20"/><path d="M26 40a28 28 0 0 1 24-14" stroke="#fff" stroke-opacity=".5" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`,
+      pebble: () => '<svg viewBox="0 0 100 100"><g transform="translate(0 14)"><path d="M10 40C4 26 18 10 36 14c13 3 15 16 31 14 15-2 28 6 24 21-4 15-27 19-45 17C26 66 14 54 10 40z" fill="url(#peb)"/><ellipse cx="30" cy="26" rx="10" ry="5" fill="#fff" opacity=".8" transform="rotate(-20 30 26)"/></g></svg>'
+    };
 
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const id = entry.target.id;
-            tabs.forEach(t => t.classList.toggle('active', t.dataset.section === id));
-            treeItems.forEach(t => t.classList.toggle('active', t.dataset.section === id));
-            mobileLinks.forEach(t => t.classList.toggle('active', t.dataset.section === id));
-          }
-        });
-      }, { root: editor, threshold: 0.3 });
+    /* ── Blob geometry ──────────────────────────── */
+    function shape(i) {
+      const j = (n, a) => Math.sin(i * 1.9 + n * 2.3) * a;
+      return [[-6, -6], [66 + j(1, 6), -6], [87 + j(2, 3), 19 + j(3, 5)], [86 + j(4, 4), 51 + j(5, 5)], [62 + j(6, 7), 78 + j(7, 4)], [-6, 96 + j(8, 3)]];
+    }
+    const BL = Array.from({ length: 10 }, (_, i) => shape(i));
+    function smooth(p) {
+      const g = (i) => p[Math.max(0, Math.min(p.length - 1, i))];
+      let d = `M${p[0][0]} ${p[0][1]}`;
+      for (let i = 0; i < p.length - 1; i++) {
+        const a = g(i - 1), b = g(i), c = g(i + 1), e = g(i + 2);
+        d += `C${(b[0] + (c[0] - a[0]) / 6).toFixed(2)} ${(b[1] + (c[1] - a[1]) / 6).toFixed(2)} ${(c[0] - (e[0] - b[0]) / 6).toFixed(2)} ${(c[1] - (e[1] - b[1]) / 6).toFixed(2)} ${c[0].toFixed(2)} ${c[1].toFixed(2)}`;
+      }
+      return d + 'Z';
+    }
+    const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+    const hex = (c) => '#' + c.map((v) => Math.round(v).toString(16).padStart(2, '0')).join('');
 
-      sections.forEach(s => observer.observe(s));
+    /* ── Content ────────────────────────────────── */
+    const P_ = (name, meta, detail, gh, live) => ({ name, meta, detail, gh, live });
+    const REPO = (n) => 'https://github.com/mwemmz/' + n;
+    const SL = [
+      {
+        id: 'home', label: 'Hello', icon: 'home', pal: 'purple', hero: 'laptop',
+        head: ['Chimwemwe', 'Siyingwa'], title: ['Hello,', "I'm Chimwemwe"],
+        tag: 'Building software that solves real problems.', cols: ['Role', 'Where'],
+        rows: [
+          { name: 'Junior Developer', meta: 'Ontech Solutions', detail: 'Collaborated with senior developers on the Local Authorities Management and Collection System (LAMCS), a production web application.' },
+          { name: 'BSc IS&T student', meta: 'Univ. of Lusaka', detail: 'Third-year Information Systems and Technology student with a 4.00 semester GPA, passionate about software engineering, open source, and building technology that solves real-world problems.' },
+          { name: 'Open source', meta: 'activist · CVAT · SymPy', detail: 'Contributing to activist, CVAT, and SymPy: mobile UI fixes, installation documentation, and type annotations.' }
+        ]
+      },
+      {
+        id: 'experience', label: 'Experience', icon: 'branch', pal: 'coral', hero: 'gitgraph',
+        head: ['Work &', 'commits'], title: ['My', 'contributions'],
+        tag: 'Production work and open source.', cols: ['Commit', 'Ref'],
+        rows: [
+          { name: 'collaborate on production web app', meta: 'feat · lamcs', detail: 'Merged Mar 2025 · reviewed by a senior developer.' },
+          { name: 'mobile UI issues, logos, edit shortcuts, location filter', meta: 'fix · activist', detail: 'PR #2258 · merged 2025 · open source contribution.' },
+          { name: 'mobile UI issues', meta: 'fix · activist', detail: 'PR #2259 · merged 2025 · open source contribution.' },
+          { name: 'installation documentation', meta: 'fix · cvat', detail: 'PR #10917 · merged 2025 · documentation fix.' },
+          { name: 'add type annotations to DirectProduct', meta: 'feat · sympy', detail: 'PR #30082 · merged 2025 · type annotations.' }
+        ]
+      },
+      {
+        id: 'websites', label: 'Websites & web apps', icon: 'browser', pal: 'yellow', hero: 'browser',
+        head: ['Websites', '& apps'], title: ['My', 'websites'],
+        tag: 'Client work and concept builds.', cols: ['Repo', 'Stack'],
+        rows: [
+          P_('royale-pavilion', 'repo', 'Events-planning landing page with a booking form.', REPO('royale-pavilion')),
+          P_('gs4', 'repo', 'Security services company website.', REPO('gs4')),
+          P_('tech-store', 'repo', 'Tech store storefront.', REPO('tech-store')),
+          P_('suitup-zambia', 'repo', 'Suit shop website.', REPO('suitup-zambia')),
+          P_('chirundu-united-fc', 'repo', 'Football club website.', REPO('chirundu-united-fc')),
+          P_('car-showroom-websites', 'TS · CSS', 'Responsive showroom with vehicle listings and dynamic filtering.', REPO('car-showroom-websites'), 'https://carshowroom-7qs.pages.dev/'),
+          P_('mindwell', 'repo', 'Mental health support website.', REPO('mindwell')),
+          P_('zaria', 'repo', 'Source on GitHub.', REPO('zaria')),
+          P_('coop-portal-replica', 'repo', 'Portal front-end replica.', REPO('coop-portal-replica')),
+          P_('bible-study-rota', 'repo', 'Rota scheduler for a study group.', REPO('bible-study-rota'))
+        ]
+      },
+      {
+        id: 'public-sector', label: 'Public sector systems', icon: 'building', pal: 'teal', hero: 'building',
+        head: ['Public', 'sector'], title: ['My civic', 'systems'],
+        tag: 'From transport regulation to revenue collection.', cols: ['Repo', 'Stack'],
+        rows: [
+          P_('lamcs-platform', 'TypeScript', 'Local Authorities Management and Collection System.', REPO('lamcs-platform')),
+          P_('rtsa-itms', 'Python · FastAPI', 'Road Transport &amp; Safety Agency integrated transport management system.', REPO('rtsa-itms')),
+          P_('cdf-project', 'repo', 'Source on GitHub.', REPO('cdf-project'))
+        ]
+      },
+      {
+        id: 'operations', label: 'Operations, logistics & finance', icon: 'gear', pal: 'blue', hero: 'gear',
+        head: ['Operations', '& finance'], title: ['My', 'platforms'],
+        tag: 'Farms, mines, airports, freight and money.', cols: ['Repo', 'Stack'],
+        rows: [
+          P_('unified-mine-operations-platform', 'TS · Python', 'Mining workflow orchestration, data tracking and dashboards.', REPO('unified-mine-operations-platform'), 'https://unified-mine-operations-platform.onrender.com/'),
+          P_('airport360', 'Python · TS', 'Flight operations, scheduling and resource allocation.', REPO('airport360'), 'https://airport360-frontend.onrender.com/'),
+          P_('server-side-farm-system', 'PHP · Docker', 'Farm operations: crop tracking, inventory and resource planning.', REPO('server-side-farm-system'), 'https://farm-management-system-mb1e.onrender.com/'),
+          P_('farm-system-3-2', 'repo', 'Farm management system.', REPO('farm-system-3-2')),
+          P_('ifms2', 'React · Flask', 'Intelligent Financial Management System: budgets, spending analysis and ML insights.', REPO('ifms2'), 'https://ifms2-22.onrender.com/'),
+          P_('z-clear', 'repo', 'Freight and clearing-agent workflow toolkit.', REPO('z-clear')),
+          P_('cargo-flow-logistics', 'repo', 'Cargo and logistics platform.', REPO('cargo-flow-logistics'))
+        ]
+      },
+      {
+        id: 'marketplaces', label: 'Marketplaces & platforms', icon: 'bag', pal: 'pink', hero: 'bag',
+        head: ['Market', 'places'], title: ['My', 'marketplaces'],
+        tag: 'Accounts, bookings and verification.', cols: ['Repo', 'Stack'],
+        rows: [
+          P_('services-booking-backend', 'repo', 'Backend for a services booking marketplace.', REPO('services-booking-backend')),
+          P_('skillbridge-zambia', 'repo', 'Verified-skills marketplace for tradespeople.', REPO('skillbridge-zambia')),
+          P_('exam-integrity-platform', 'React · Node', 'Online practical exams with integrity monitoring.', REPO('exam-integrity-platform'))
+        ]
+      },
+      {
+        id: 'ai-data', label: 'AI & data', icon: 'chip', pal: 'purple', hero: 'chip',
+        head: ['AI &', 'data'], title: ['My', 'agents'],
+        tag: 'Retrieval, embeddings and prompt design.', cols: ['Repo', 'Stack'],
+        rows: [
+          P_('selective-memory-chat-agent', 'Python · ChromaDB', 'Chatbot that stores only worthwhile facts as embeddings and retrieves them when relevant.', REPO('selective-memory-chat-agent')),
+          P_('multi-agent-fact-checker', 'repo', 'Multi-agent fact checking.', REPO('multi-agent-fact-checker')),
+          P_('grove-ai', 'repo', 'Source on GitHub.', REPO('grove-ai')),
+          P_('wildlife-sentinel', 'repo', 'Source on GitHub.', REPO('wildlife-sentinel'))
+        ]
+      },
+      {
+        id: 'skills', label: 'Skills', icon: 'layers', pal: 'green', hero: 'layers',
+        head: ['Skills', '& tools'], title: ['My', 'toolbox'],
+        tag: 'What I build with.', cols: ['Group', 'Count'],
+        rows: [
+          { name: 'Languages', meta: '7', chips: ['Python', 'Java', 'TypeScript', 'JavaScript', 'HTML', 'CSS', 'SQL'] },
+          { name: 'Frameworks', meta: '6', chips: ['React', 'Flask', 'Vue.js', 'Nuxt', 'Tailwind CSS', 'JWT'] },
+          { name: 'Databases & DevOps', meta: '5', chips: ['PostgreSQL', 'SQLite', 'Firebase', 'Docker', 'Git'] },
+          { name: 'Testing', meta: '4', chips: ['pytest', 'mypy', 'ESLint', 'Vitest'] }
+        ]
+      },
+      {
+        id: 'education', label: 'Education', icon: 'cap', pal: 'coral', hero: 'cap',
+        head: ['Education', '2023–2027'], title: ['My', 'studies'],
+        tag: 'University of Lusaka.', cols: ['Item', 'Value'],
+        rows: [
+          { name: 'University of Lusaka', meta: '2023–2027', detail: 'BSc Information Systems and Technology.' },
+          { name: 'Year 1 GPA', meta: '3.70', detail: 'First year.' },
+          { name: 'Year 2 GPA', meta: '3.90', detail: 'Second year.' },
+          { name: 'Current GPA', meta: '4.00', detail: 'Current semester.' },
+          { name: 'Relevant coursework', meta: '4 courses', chips: ['Systems Analysis', 'Database Design', 'Data Structures', 'Project Management'] }
+        ]
+      },
+      {
+        id: 'connect', label: 'Connect', icon: 'mail', pal: 'navy', hero: 'envelope',
+        head: ["Let's", 'connect'], title: ["Let's", 'talk'],
+        tag: 'Open to internships and collaborations.', cols: ['Where', 'Handle'],
+        rows: [
+          { name: 'GitHub', meta: 'mwemmz', href: 'https://github.com/mwemmz' },
+          { name: 'LinkedIn', meta: 'chimwemwe-siyingwa', href: 'https://www.linkedin.com/in/chimwemwe-siyingwa-97b627352' },
+          { name: 'Email', meta: 'chimwemwesiyingwa361@gmail.com', href: 'mailto:chimwemwesiyingwa361@gmail.com' }
+        ]
+      }
+    ];
 
-      // Status bar line counter
-      editor.addEventListener('scroll', () => {
-        const scrollTop = editor.scrollTop;
-        const line = Math.floor(scrollTop / 22) + 1;
-        statusLine.textContent = 'Ln ' + line;
+    const LAYOUTS = [
+      [{ t: 'cube', k: 0, d: [35, 5], m: [47, 9], z: 9, zm: 7 }, { t: 'sphere', k: 1, d: [22, 58], m: [14, 36], z: 8, zm: 6 }, { t: 'ring', k: 1, d: [47, 52], m: [90, 40], z: 7, zm: 6 }],
+      [{ t: 'sphere', k: 1, d: [40, 6], m: [50, 6], z: 8, zm: 6 }, { t: 'pill', k: 0, d: [16, 57], m: [12, 38], z: 9, zm: 7 }, { t: 'cube', k: 1, d: [47, 57], m: [88, 38], z: 7, zm: 6 }],
+      [{ t: 'pill', k: 1, d: [33, 4], m: [44, 8], z: 9, zm: 7 }, { t: 'ring', k: 0, d: [19, 58], m: [14, 38], z: 8, zm: 6 }, { t: 'sphere', k: 0, d: [48, 54], m: [88, 40], z: 7, zm: 6 }]
+    ];
+
+    /* ── Elements ───────────────────────────────── */
+    const card = $('#card'), headline = $('#headline'), titleEl = $('#title'), tagEl = $('#tag'), thead = $('#thead'),
+      list = $('#list'), fx = $('#fx'), steps = $('#steps'), menu = $('#menu'), menubtn = $('#menubtn'),
+      live = $('#live'), probe = $('#probe'), blobEl = $('#blob'), s1 = $('#bs1'), s2 = $('#bs2');
+    document.body.insertAdjacentHTML('afterbegin', defs());
+    $('#prev').innerHTML = ico('prev'); $('#mail').innerHTML = ico('mail'); $('#gh').innerHTML = GH;
+    $('#next').innerHTML = ico('next'); menubtn.innerHTML = ico('menu');
+    menu.innerHTML = SL.map((s, i) => `<li><button type="button" data-go="${i}">${ico(s.icon)}<span>${esc(s.label)}</span><small>${String(i + 1).padStart(2, '0')}</small></button></li>`).join('');
+
+    const uPx = () => probe.getBoundingClientRect().width || 10;
+    const anim = (el, kf, o) => { try { return el.animate(kf, o).finished.catch(() => {}); } catch (e) { return Promise.resolve(); } };
+
+    /* ── Blob morph ─────────────────────────────── */
+    const cur = { pts: BL[0].map((p) => p.slice()), a: rgb(PAL.purple.a), b: rgb(PAL.purple.b) };
+    function drawBlob() { blobEl.setAttribute('d', smooth(cur.pts)); s1.setAttribute('stop-color', hex(cur.a)); s2.setAttribute('stop-color', hex(cur.b)); }
+    function morph(to, ms) {
+      if (reduce || ms === 0) { cur.pts = to.pts.map((p) => p.slice()); cur.a = to.a; cur.b = to.b; drawBlob(); return Promise.resolve(); }
+      const from = { pts: cur.pts.map((p) => p.slice()), a: cur.a.slice(), b: cur.b.slice() }, t0 = performance.now();
+      return new Promise((res) => {
+        const step = (t) => {
+          const k = Math.min(1, (t - t0) / ms), e = ease(k);
+          cur.pts = from.pts.map((p, i) => [lerp(p[0], to.pts[i][0], e), lerp(p[1], to.pts[i][1], e)]);
+          cur.a = from.a.map((v, i) => lerp(v, to.a[i], e)); cur.b = from.b.map((v, i) => lerp(v, to.b[i], e));
+          drawBlob();
+          k < 1 ? requestAnimationFrame(step) : res();
+        };
+        requestAnimationFrame(step);
       });
-    })();
-  </script>
+    }
 
+    /* ── Rows ───────────────────────────────────── */
+    function thumb(i, k) {
+      const t = i % 4;
+      if (t === 0) return `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="url(#s-${k})"/><ellipse cx="14" cy="13" rx="5" ry="3" transform="rotate(-30 14 13)" fill="#fff" opacity=".5"/></svg>`;
+      if (t === 1) return `<svg viewBox="0 0 40 40"><g transform="rotate(14 20 20)"><rect x="7" y="7" width="26" height="26" rx="8" fill="url(#m-${k})"/><path d="M12 14q4-5 10-5" stroke="#fff" stroke-opacity=".5" stroke-width="2" fill="none" stroke-linecap="round"/></g></svg>`;
+      if (t === 2) return `<svg viewBox="0 0 40 40"><g transform="rotate(-28 20 20)"><rect x="3" y="12" width="34" height="16" rx="8" fill="url(#m-${k})"/><rect x="9" y="15" width="12" height="3" rx="1.500" fill="#fff" opacity=".45"/></g></svg>`;
+      return `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="12" fill="none" stroke="url(#m-${k})" stroke-width="8"/></svg>`;
+    }
+    function rowHTML(r, i, k) {
+      const th = thumb(i, k), head = `<span class="nm">${esc(r.name)}</span><span class="mt">${esc(r.meta || '')}</span><span class="th">${th}</span>`;
+      if (r.href) return `<li class="item"><a class="row" href="${esc(r.href)}"${r.href.startsWith('mailto') ? '' : ' target="_blank" rel="noopener noreferrer"'}>${head}<span class="pl">${ico('out')}</span></a></li>`;
+      let body = r.chips ? `<div class="chips">${r.chips.map((c) => `<span>${esc(c)}</span>`).join('')}</div>` : `<div>${r.detail || ''}`;
+      if (!r.chips) {
+        if (r.gh) body += `<div><a class="lk" href="${esc(r.gh)}" target="_blank" rel="noopener noreferrer">GitHub ${ico('out')}</a>${r.live ? `<a class="lk" href="${esc(r.live)}" target="_blank" rel="noopener noreferrer">Live demo ${ico('out')}</a>` : ''}</div>`;
+        body += '</div>';
+      } else body = `<div>${body}</div>`;
+      return `<li class="item"><button class="row" type="button" aria-expanded="false">${head}<span class="pl">${ico('plus')}</span></button><div class="detail">${body}</div></li>`;
+    }
+    list.addEventListener('click', (e) => {
+      const b = e.target.closest('button.row');
+      if (!b) return;
+      const item = b.parentElement, open = !item.classList.contains('open');
+      list.querySelectorAll('.item.open').forEach((x) => { if (x !== item) { x.classList.remove('open'); x.querySelector('.detail').style.maxHeight = '0px'; x.querySelector('.row').setAttribute('aria-expanded', 'false'); } });
+      item.classList.toggle('open', open);
+      b.setAttribute('aria-expanded', String(open));
+      const d = item.querySelector('.detail');
+      d.style.maxHeight = open ? d.scrollHeight + 'px' : '0px';
+    });
+
+    /* ── Objects ────────────────────────────────── */
+    function buildFx(S, n, withPebble) {
+      const clay = CLAY[S.pal] || S.pal, alt = ALT[clay] || 'pink', out = [];
+      const mk = (cls, d, m, z, zm, html, fd) => {
+        const el = document.createElement('div');
+        el.className = 'o ' + cls;
+        el.style.cssText = `--dx:${d[0]};--dy:${d[1]};--mx:${m[0]};--my:${m[1]};--z:${z};--zm:${zm}`;
+        el.innerHTML = `<div class="fl" style="--fd:${fd}s">${html}</div>`;
+        return el;
+      };
+      if (withPebble) out.push(mk('static', [9.5, 51], [11, 41], 8, 6, ORB.pebble()));
+      out.push(mk('hero', [39, 57], [70, 22], 25, 26, HERO[S.hero](clay), 7));
+      LAYOUTS[n % 3].forEach((o, i) => out.push(mk('orb', o.d, o.m, o.z, o.zm, ORB[o.t](o.k ? alt : clay), 5 + i * 1.3)));
+      return out;
+    }
+
+    /* ── Slide change ───────────────────────────── */
+    let idx = -1, busy = false, typeTok = 0;
+    function typeTag(text) {
+      const tok = ++typeTok;
+      tagEl.textContent = '';
+      if (reduce) { tagEl.textContent = text; return; }
+      let i = 0;
+      (function step() { if (tok !== typeTok) return; tagEl.textContent = text.slice(0, ++i); if (i < text.length) setTimeout(step, 16); })();
+    }
+    const lines = (arr, cls) => arr.map((t) => `<span class="ln"><span class="${cls}">${esc(t)}</span></span>`).join('');
+
+    async function swapHead(S, d, first) {
+      const old = [...headline.querySelectorAll('.t')];
+      if (old.length && !first && !reduce) await Promise.all(old.map((el, i) => anim(el, [{ transform: 'translateX(0)' }, { transform: `translateX(${-108 * d}%)` }], { duration: 360, delay: i * 50, easing: 'cubic-bezier(.6,0,.9,.5)', fill: 'forwards' })));
+      headline.innerHTML = lines(S.head, 't');
+      if (!reduce) await Promise.all([...headline.querySelectorAll('.t')].map((el, i) => anim(el, [{ transform: `translateX(${108 * d}%)` }, { transform: 'translateX(0)' }], { duration: 640, delay: i * 80, easing: 'cubic-bezier(.2,.9,.25,1)', fill: 'both' })));
+    }
+    async function swapPanel(S, d, first, U) {
+      const olds = [...titleEl.querySelectorAll('.t2')], items = [...list.children];
+      if (!first && !reduce) {
+        await Promise.all([
+          ...olds.map((el, i) => anim(el, [{ transform: 'translateY(0)' }, { transform: 'translateY(-115%)' }], { duration: 280, delay: i * 40, easing: 'ease-in', fill: 'forwards' })),
+          ...items.slice(0, 7).map((el, i) => anim(el, [{ opacity: 1, transform: 'translateX(0)' }, { opacity: 0, transform: `translateX(${-6 * d * U}px)` }], { duration: 300, delay: i * 30, easing: 'ease-in', fill: 'forwards' }))
+        ]);
+      }
+      titleEl.innerHTML = lines(S.title, 't2');
+      thead.innerHTML = `<span>${esc(S.cols[0])}</span><span>${esc(S.cols[1])}</span><span></span><span></span>`;
+      list.innerHTML = S.rows.map((r, i) => rowHTML(r, i, CLAY[S.pal] || S.pal)).join('');
+      list.scrollTop = 0;
+      typeTag(S.tag);
+      if (!reduce) {
+        await Promise.all([
+          ...[...titleEl.querySelectorAll('.t2')].map((el, i) => anim(el, [{ transform: 'translateY(115%)' }, { transform: 'translateY(0)' }], { duration: 560, delay: 120 + i * 70, easing: 'cubic-bezier(.2,.9,.25,1)', fill: 'both' })),
+          ...[...list.children].slice(0, 8).map((el, i) => anim(el, [{ opacity: 0, transform: `translateX(${8 * d * U}px)` }, { opacity: 1, transform: 'translateX(0)' }], { duration: 600, delay: 140 + i * 65, easing: 'cubic-bezier(.2,.9,.25,1)', fill: 'both' }))
+        ]);
+      }
+    }
+    async function swapFx(S, n, d, first, U) {
+      const old = [...fx.querySelectorAll('.o:not(.static)')];
+      if (!first && !reduce) await Promise.all(old.map((el, i) => anim(el, [{ transform: 'none', filter: 'blur(0px)', opacity: 1 }, { transform: `translate(${-26 * d * U}px, ${10 * U}px) scale(.82) rotate(${-18 * d}deg)`, filter: 'blur(14px)', opacity: 0 }], { duration: 420, delay: i * 40, easing: 'cubic-bezier(.55,0,.9,.45)', fill: 'forwards' })));
+      old.forEach((e) => e.remove());
+      const made = buildFx(S, n, !fx.querySelector('.static'));
+      fx.append(...made);
+      if (!reduce) await Promise.all(made.filter((e) => !e.classList.contains('static') || first).map((el, i) => anim(el, [{ transform: `translate(${-16 * d * U}px, ${-26 * U}px) scale(.7) rotate(${22 * d}deg)`, filter: 'blur(16px)', opacity: 0 }, { transform: 'none', filter: 'blur(0px)', opacity: 1 }], { duration: 760, delay: i * 90, easing: 'cubic-bezier(.2,.9,.25,1)', fill: 'both' })));
+    }
+    function chrome(n) {
+      const S = SL[n], P = PAL[S.pal];
+      card.style.setProperty('--acc', S.pal === 'navy' ? '#ff6a47' : P.acc);
+      const a = (n + 1) % SL.length, b = (n + 2) % SL.length;
+      steps.innerHTML = `<button class="cur" type="button" aria-label="Current section: ${esc(S.label)}" data-go="${n}">${ico(S.icon)}</button><i class="dash"></i><button class="sm" type="button" data-go="${a}" aria-label="${esc(SL[a].label)}">${ico(SL[a].icon)}</button><i class="dash"></i><button class="sm" type="button" data-go="${b}" aria-label="${esc(SL[b].label)}">${ico(SL[b].icon)}</button>`;
+      menu.querySelectorAll('button').forEach((x, i) => (i === n ? x.setAttribute('aria-current', 'true') : x.removeAttribute('aria-current')));
+      live.textContent = `${S.label}, section ${n + 1} of ${SL.length}`;
+      history.replaceState(null, '', '#' + S.id);
+    }
+    async function go(n, d = 1, first = false) {
+      n = (n + SL.length) % SL.length;
+      if (busy || (!first && n === idx)) return;
+      busy = true; closeMenu();
+      const S = SL[n], U = uPx();
+      chrome(n);
+      await Promise.all([
+        morph({ pts: BL[n], a: rgb(PAL[S.pal].a), b: rgb(PAL[S.pal].b) }, first ? 0 : 900),
+        swapHead(S, d, first), swapPanel(S, d, first, U), swapFx(S, n, d, first, U)
+      ]);
+      idx = n; busy = false;
+    }
+
+    /* ── Input ──────────────────────────────────── */
+    function closeMenu() { menu.hidden = true; menubtn.setAttribute('aria-expanded', 'false'); }
+    $('#next').addEventListener('click', () => go(idx + 1, 1));
+    $('#prev').addEventListener('click', () => go(idx - 1, -1));
+    $('#avatar').addEventListener('click', () => go(SL.length - 1, 1));
+    menubtn.addEventListener('click', () => { const o = menu.hidden; menu.hidden = !o; menubtn.setAttribute('aria-expanded', String(o)); });
+    card.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-go]');
+      if (b) { const n = +b.dataset.go; go(n, n >= idx ? 1 : -1); }
+      else if (!e.target.closest('.menu, .menubtn')) closeMenu();
+    });
+    addEventListener('keydown', (e) => {
+      if (e.target.closest && e.target.closest('input, textarea')) return;
+      if (e.key === 'ArrowRight') go(idx + 1, 1);
+      else if (e.key === 'ArrowLeft') go(idx - 1, -1);
+      else if (e.key === 'Escape') closeMenu();
+    });
+    card.addEventListener('wheel', (e) => {
+      if (e.target.closest('.list, .menu')) return;
+      const v = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (Math.abs(v) < 30) return;
+      go(idx + (v > 0 ? 1 : -1), v > 0 ? 1 : -1);
+    }, { passive: true });
+    let tx = 0, ty = 0;
+    card.addEventListener('touchstart', (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+    card.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(idx + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+    }, { passive: true });
+
+    const start = Math.max(0, SL.findIndex((s) => '#' + s.id === location.hash));
+    drawBlob();
+    go(start, 1, true);
+  })();
+  </script>
 </body>
 </html>
